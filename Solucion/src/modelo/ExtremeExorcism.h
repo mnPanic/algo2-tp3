@@ -15,7 +15,6 @@
 
 using namespace std;
 using pasoDisparos = pair<int, int>;
-using evento = tuple<Pos, Dir, bool>;
 
 class ExtremeExorcism {
 public:
@@ -48,13 +47,9 @@ public:
 
 private:
   struct Juego {
-      struct infoPJ {
-          list<evento> eventos;
-          bool vivo;
-          //iterador a infoActualPJ
-      };
-
-
+      struct infoPJ;
+      struct infoActualPJ;
+      struct infoFan;
 
       //General
       int paso;
@@ -66,9 +61,33 @@ private:
       algo2::linear_set<Pos> disparosFanUltimoPaso;
 
       //Jugadores
-      string_map<string, infoPJ> infoJugadores;
+      string_map<infoPJ> infoJugadores;
+      list<infoActualPJ> infoActualJugadoresVivos;
+      algo2::linear_set<infoPJ*> infoJugadoresVivos;
 
+      //Fantasmas
+      list<Fantasma> infoFantasmas;
+      list<PosYDir> infoActualFantasmasVivos;
+      algo2::linear_set<list<Fantasma>::iterator> infoFantasmasVivos;
+      list<PosYDir>::iterator infoFantasmaEspecial;
 
+      struct infoPJ {
+          list<Evento> eventos;
+          bool vivo;
+          list<infoActualPJ>::iterator infoActual;
+      };
+
+      struct infoActualPJ {
+          Jugador identidad;
+          Pos posicion;
+          Dir direccion;
+      };
+
+      struct infoFan {
+          vector<Evento> eventos;
+          bool vivo;
+          list<PosYDir>::iterator infoActual;
+      };
   };
 };
 
