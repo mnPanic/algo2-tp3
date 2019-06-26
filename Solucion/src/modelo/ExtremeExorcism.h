@@ -18,21 +18,21 @@ public:
   ExtremeExorcism(Habitacion h, set<Jugador> jugadores, PosYDir f_init,
                   list<Accion> acciones_fantasma, Contexto *ctx);
 
-  void pasar();
+  void pasar(); //O(#fv ∗ m + #jv)
 
-  void ejecutarAccion(Jugador j, Accion a);
+  void ejecutarAccion(Jugador j, Accion a); //O(|pj| + m*#fv #jv)
 
-  list<pair<Jugador, PosYDir>> posicionJugadores() const;
+  list<pair<Jugador, PosYDir>> posicionJugadores() const; //O(1)
 
-  list<PosYDir> posicionFantasmas() const;
+  list<PosYDir> posicionFantasmas() const; //O(1)
 
-  PosYDir posicionEspecial() const;
+  PosYDir posicionEspecial() const; //O(1)
 
-  list<PosYDir> disparosFantasmas() const;
+  list<PosYDir> disparosFantasmas() const; //O(#fv)
 
-  set<Pos> posicionesDisparadas() const;
+  set<Pos> posicionesDisparadas() const; //O(1)
 
-  bool jugadorVivo(Jugador j) const;
+  bool jugadorVivo(Jugador j) const; //O(|pj|)
 
   const Habitacion &habitacion() const;
 
