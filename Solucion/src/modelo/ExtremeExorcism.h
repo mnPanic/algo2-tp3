@@ -4,14 +4,18 @@
 #include "Contexto.h"
 #include "Habitacion.h"
 #include "TiposJuego.h"
+#include "string_map.h"
 #include <list>
 #include <map>
 #include <set>
 #include <string>
 #include <utility>
 #include <vector>
+#include <modulos_basicos/linear_set.h>
 
 using namespace std;
+using pasoDisparos = pair<int, int>;
+using evento = tuple<Pos, Dir, bool>;
 
 class ExtremeExorcism {
 public:
@@ -43,7 +47,29 @@ public:
   const list<Fantasma> &fantasmas() const;
 
 private:
-  // Completar
+  struct Juego {
+      struct infoPJ {
+          list<evento> eventos;
+          bool vivo;
+          //iterador a infoActualPJ
+      };
+
+
+
+      //General
+      int paso;
+      int ronda;
+      Habitacion mapa;
+
+      //Disparos
+      vector<vector<pasoDisparos>> mapaDisparos;
+      algo2::linear_set<Pos> disparosFanUltimoPaso;
+
+      //Jugadores
+      string_map<string, infoPJ> infoJugadores;
+
+
+  };
 };
 
 #endif
