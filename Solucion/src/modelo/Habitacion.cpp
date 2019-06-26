@@ -1,8 +1,17 @@
+
 #include "Habitacion.h"
 #include "assert.h"
 #include <istream>
 #include <sstream>
 #include <string>
+
+unsigned int Habitacion::tam() const {
+    return tamanio;
+}
+
+bool Habitacion::ocupado(Pos) const {
+    return casilleros[Pos.first][Pos.second]
+}
 
 Habitacion string_to_hab(std::istream& is) {
     int row = 0;

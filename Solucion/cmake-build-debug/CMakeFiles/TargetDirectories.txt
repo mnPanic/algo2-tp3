@@ -1,0 +1,10 @@
+/home/grosinov/Rosinov/algo2-tp3/Solucion/cmake-build-debug/CMakeFiles/rebuild_cache.dir
+/home/grosinov/Rosinov/algo2-tp3/Solucion/cmake-build-debug/CMakeFiles/edit_cache.dir
+/home/grosinov/Rosinov/algo2-tp3/Solucion/cmake-build-debug/src/CMakeFiles/rebuild_cache.dir
+/home/grosinov/Rosinov/algo2-tp3/Solucion/cmake-build-debug/src/CMakeFiles/ExtremeExorcism_lib.dir
+/home/grosinov/Rosinov/algo2-tp3/Solucion/cmake-build-debug/src/CMakeFiles/edit_cache.dir
+/home/grosinov/Rosinov/algo2-tp3/Solucion/cmake-build-debug/tests/CMakeFiles/rebuild_cache.dir
+/home/grosinov/Rosinov/algo2-tp3/Solucion/cmake-build-debug/tests/CMakeFiles/correrTests.dir
+/home/grosinov/Rosinov/algo2-tp3/Solucion/cmake-build-debug/tests/CMakeFiles/gtest.dir
+/home/grosinov/Rosinov/algo2-tp3/Solucion/cmake-build-debug/tests/CMakeFiles/edit_cache.dir
+/home/grosinov/Rosinov/algo2-tp3/Solucion/cmake-build-debug/tests/CMakeFiles/gtest_main.dir

@@ -1,0 +1,62 @@
+[
+{
+  "directory": "/home/grosinov/Rosinov/algo2-tp3/Solucion/cmake-build-debug/src",
+  "command": "/usr/bin/c++   -I/home/grosinov/Rosinov/algo2-tp3/Solucion/src   -pthread -std=gnu++11 -ggdb3 -g -g   -o CMakeFiles/ExtremeExorcism_lib.dir/modelo/Contexto.cpp.o -c /home/grosinov/Rosinov/algo2-tp3/Solucion/src/modelo/Contexto.cpp",
+  "file": "/home/grosinov/Rosinov/algo2-tp3/Solucion/src/modelo/Contexto.cpp"
+},
+{
+  "directory": "/home/grosinov/Rosinov/algo2-tp3/Solucion/cmake-build-debug/src",
+  "command": "/usr/bin/c++   -I/home/grosinov/Rosinov/algo2-tp3/Solucion/src   -pthread -std=gnu++11 -ggdb3 -g -g   -o CMakeFiles/ExtremeExorcism_lib.dir/modelo/ExtremeExorcism.cpp.o -c /home/grosinov/Rosinov/algo2-tp3/Solucion/src/modelo/ExtremeExorcism.cpp",
+  "file": "/home/grosinov/Rosinov/algo2-tp3/Solucion/src/modelo/ExtremeExorcism.cpp"
+},
+{
+  "directory": "/home/grosinov/Rosinov/algo2-tp3/Solucion/cmake-build-debug/src",
+  "command": "/usr/bin/c++   -I/home/grosinov/Rosinov/algo2-tp3/Solucion/src   -pthread -std=gnu++11 -ggdb3 -g -g   -o CMakeFiles/ExtremeExorcism_lib.dir/modelo/Habitacion.cpp.o -c /home/grosinov/Rosinov/algo2-tp3/Solucion/src/modelo/Habitacion.cpp",
+  "file": "/home/grosinov/Rosinov/algo2-tp3/Solucion/src/modelo/Habitacion.cpp"
+},
+{
+  "directory": "/home/grosinov/Rosinov/algo2-tp3/Solucion/cmake-build-debug/src",
+  "command": "/usr/bin/c++   -I/home/grosinov/Rosinov/algo2-tp3/Solucion/src   -pthread -std=gnu++11 -ggdb3 -g -g   -o CMakeFiles/ExtremeExorcism_lib.dir/modelo/TiposJuego.cpp.o -c /home/grosinov/Rosinov/algo2-tp3/Solucion/src/modelo/TiposJuego.cpp",
+  "file": "/home/grosinov/Rosinov/algo2-tp3/Solucion/src/modelo/TiposJuego.cpp"
+},
+{
+  "directory": "/home/grosinov/Rosinov/algo2-tp3/Solucion/cmake-build-debug/src",
+  "command": "/usr/bin/c++   -I/home/grosinov/Rosinov/algo2-tp3/Solucion/src   -pthread -std=gnu++11 -ggdb3 -g -g   -o CMakeFiles/ExtremeExorcism_lib.dir/modelo/localizadores/localizador.cpp.o -c /home/grosinov/Rosinov/algo2-tp3/Solucion/src/modelo/localizadores/localizador.cpp",
+  "file": "/home/grosinov/Rosinov/algo2-tp3/Solucion/src/modelo/localizadores/localizador.cpp"
+},
+{
+  "directory": "/home/grosinov/Rosinov/algo2-tp3/Solucion/cmake-build-debug/src",
+  "command": "/usr/bin/c++   -I/home/grosinov/Rosinov/algo2-tp3/Solucion/src   -pthread -std=gnu++11 -ggdb3 -g -g   -o CMakeFiles/ExtremeExorcism_lib.dir/modelo/localizadores/localizador_aleatorio.cpp.o -c /home/grosinov/Rosinov/algo2-tp3/Solucion/src/modelo/localizadores/localizador_aleatorio.cpp",
+  "file": "/home/grosinov/Rosinov/algo2-tp3/Solucion/src/modelo/localizadores/localizador_aleatorio.cpp"
+},
+{
+  "directory": "/home/grosinov/Rosinov/algo2-tp3/Solucion/cmake-build-debug/src",
+  "command": "/usr/bin/c++   -I/home/grosinov/Rosinov/algo2-tp3/Solucion/src   -pthread -std=gnu++11 -ggdb3 -g -g   -o CMakeFiles/ExtremeExorcism_lib.dir/modelo/localizadores/localizador_estatico.cpp.o -c /home/grosinov/Rosinov/algo2-tp3/Solucion/src/modelo/localizadores/localizador_estatico.cpp",
+  "file": "/home/grosinov/Rosinov/algo2-tp3/Solucion/src/modelo/localizadores/localizador_estatico.cpp"
+},
+{
+  "directory": "/home/grosinov/Rosinov/algo2-tp3/Solucion/cmake-build-debug/tests",
+  "command": "/usr/bin/c++   -I/home/grosinov/Rosinov/algo2-tp3/Solucion/src   -pthread -std=gnu++11 -ggdb3 -g -g   -o CMakeFiles/correrTests.dir/ee_tests.cpp.o -c /home/grosinov/Rosinov/algo2-tp3/Solucion/tests/ee_tests.cpp",
+  "file": "/home/grosinov/Rosinov/algo2-tp3/Solucion/tests/ee_tests.cpp"
+},
+{
+  "directory": "/home/grosinov/Rosinov/algo2-tp3/Solucion/cmake-build-debug/tests",
+  "command": "/usr/bin/c++   -I/home/grosinov/Rosinov/algo2-tp3/Solucion/src   -pthread -std=gnu++11 -ggdb3 -g -g   -o CMakeFiles/correrTests.dir/hab_tests.cpp.o -c /home/grosinov/Rosinov/algo2-tp3/Solucion/tests/hab_tests.cpp",
+  "file": "/home/grosinov/Rosinov/algo2-tp3/Solucion/tests/hab_tests.cpp"
+},
+{
+  "directory": "/home/grosinov/Rosinov/algo2-tp3/Solucion/cmake-build-debug/tests",
+  "command": "/usr/bin/c++   -I/home/grosinov/Rosinov/algo2-tp3/Solucion/src   -pthread -std=gnu++11 -ggdb3 -g -g   -o CMakeFiles/correrTests.dir/estado/EstadoJuego.cpp.o -c /home/grosinov/Rosinov/algo2-tp3/Solucion/tests/estado/EstadoJuego.cpp",
+  "file": "/home/grosinov/Rosinov/algo2-tp3/Solucion/tests/estado/EstadoJuego.cpp"
+},
+{
+  "directory": "/home/grosinov/Rosinov/algo2-tp3/Solucion/cmake-build-debug/tests",
+  "command": "/usr/bin/c++     -pthread -std=gnu++11 -ggdb3 -g -g   -o CMakeFiles/gtest.dir/gtest-1.8.1/gtest-all.cc.o -c /home/grosinov/Rosinov/algo2-tp3/Solucion/tests/gtest-1.8.1/gtest-all.cc",
+  "file": "/home/grosinov/Rosinov/algo2-tp3/Solucion/tests/gtest-1.8.1/gtest-all.cc"
+},
+{
+  "directory": "/home/grosinov/Rosinov/algo2-tp3/Solucion/cmake-build-debug/tests",
+  "command": "/usr/bin/c++     -pthread -std=gnu++11 -ggdb3 -g -g   -o CMakeFiles/gtest_main.dir/gtest-1.8.1/gtest_main.cc.o -c /home/grosinov/Rosinov/algo2-tp3/Solucion/tests/gtest-1.8.1/gtest_main.cc",
+  "file": "/home/grosinov/Rosinov/algo2-tp3/Solucion/tests/gtest-1.8.1/gtest_main.cc"
+}
+]
