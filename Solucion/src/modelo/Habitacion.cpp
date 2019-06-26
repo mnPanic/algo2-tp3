@@ -5,12 +5,27 @@
 #include <sstream>
 #include <string>
 
+Habitacion::Habitacion(unsigned int tam, set<Pos> ocupadas) {
+    tamanio = tam;
+
+    vector<bool> v1(tam, true);
+    vector<vector<bool>> v(tam, v1);
+
+    for(Pos p : ocupadas) {
+        casilleros[p.first][p.second] = false;
+    }
+}
+
 unsigned int Habitacion::tam() const {
     return tamanio;
 }
 
-bool Habitacion::ocupado(Pos) const {
-    return casilleros[Pos.first][Pos.second]
+bool Habitacion::ocupado(Pos pos) const {
+    return !casilleros[pos.first][pos.second];
+}
+
+bool Habitacion::operator==(const Habitacion & h) const {
+    return casilleros == h.casilleros;
 }
 
 Habitacion string_to_hab(std::istream& is) {
