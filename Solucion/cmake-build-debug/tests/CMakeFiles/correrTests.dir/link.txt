@@ -1,1 +1,0 @@
-/usr/bin/c++   -pthread -std=gnu++11 -ggdb3 -g -g   CMakeFiles/correrTests.dir/ee_tests.cpp.o CMakeFiles/correrTests.dir/hab_tests.cpp.o CMakeFiles/correrTests.dir/estado/EstadoJuego.cpp.o  -o ../bin/correrTests libgtest.a libgtest_main.a ../src/libExtremeExorcism_lib.a 
