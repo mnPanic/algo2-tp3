@@ -46,44 +46,41 @@ public:
   const list<Fantasma> &fantasmas() const;
 
 private:
-  struct Juego {
-      struct infoPJ;
-      struct infoFan;
+    struct InfoPJ {
+        list<Evento> eventos;
+        bool vivo;
+        list<pair<Jugador, PosYDir>>::iterator infoActual;
+    };
 
-      //General
-      int paso;
-      int ronda;
-      Habitacion mapa;
+    struct InfoFan {
+        vector<Evento> eventos;
+        bool vivo;
+        list<PosYDir>::iterator infoActual;
+    };
 
-      //Disparos
-      vector<vector<pasoDisparos>> mapaDisparos;
-      set<Pos> disparosFanUltimoPaso;
+    struct Juego {
+        //General
+        int paso;
+        int ronda;
+        Habitacion mapa;
 
-      //Jugadores
-      string_map<infoPJ> infoJugadores;
-      list<pair<Jugador, PosYDir>> infoActualJugadoresVivos;
-      algo2::linear_set<infoPJ*> infoJugadoresVivos;
+        //Disparos
+        vector<vector<pasoDisparos>> mapaDisparos;
+        set<Pos> disparosFanUltimoPaso;
 
-      //Fantasmas
-      list<Fantasma> infoFantasmas;
-      list<PosYDir> infoActualFantasmasVivos;
-      algo2::linear_set<list<Fantasma>::iterator> infoFantasmasVivos;
-      list<PosYDir>::iterator infoFantasmaEspecial;
+        //Jugadores
+        string_map<InfoPJ> infoJugadores;
+        list<pair<Jugador, PosYDir>> infoActualJugadoresVivos;
+        algo2::linear_set<InfoPJ*> infoJugadoresVivos;
 
-      struct infoPJ {
-          list<Evento> eventos;
-          bool vivo;
-          list<pair<Jugador, PosYDir>>::iterator infoActual;
-      };
+        //Fantasmas
+        list<Fantasma> infoFantasmas;
+        list<PosYDir> infoActualFantasmasVivos;
+        algo2::linear_set<list<Fantasma>::iterator> infoFantasmasVivos;
+        list<PosYDir>::iterator infoFantasmaEspecial;
+    };
 
-      struct infoFan {
-          vector<Evento> eventos;
-          bool vivo;
-          list<PosYDir>::iterator infoActual;
-      };
-  };
-
-  Juego juego;
+    Juego juego;
 };
 
 #endif
