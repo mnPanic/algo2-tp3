@@ -48,7 +48,6 @@ public:
 private:
   struct Juego {
       struct infoPJ;
-      struct infoActualPJ;
       struct infoFan;
 
       //General
@@ -58,11 +57,11 @@ private:
 
       //Disparos
       vector<vector<pasoDisparos>> mapaDisparos;
-      algo2::linear_set<Pos> disparosFanUltimoPaso;
+      set<Pos> disparosFanUltimoPaso;
 
       //Jugadores
       string_map<infoPJ> infoJugadores;
-      list<infoActualPJ> infoActualJugadoresVivos;
+      list<pair<Jugador, PosYDir>> infoActualJugadoresVivos;
       algo2::linear_set<infoPJ*> infoJugadoresVivos;
 
       //Fantasmas
@@ -74,13 +73,7 @@ private:
       struct infoPJ {
           list<Evento> eventos;
           bool vivo;
-          list<infoActualPJ>::iterator infoActual;
-      };
-
-      struct infoActualPJ {
-          Jugador identidad;
-          Pos posicion;
-          Dir direccion;
+          list<pair<Jugador, PosYDir>>::iterator infoActual;
       };
 
       struct infoFan {
