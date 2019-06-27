@@ -82,6 +82,8 @@ private:
           list<PosYDir>::iterator infoActual;
       };
   };
+
+  Juego juego;
 };
 
 #endif
