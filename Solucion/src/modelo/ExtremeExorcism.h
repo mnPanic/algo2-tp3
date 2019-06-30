@@ -76,7 +76,7 @@ private:
         //Fantasmas
         list<Fantasma> infoFantasmas;
         list<PosYDir> infoActualFantasmasVivos;
-        algo2::linear_set<list<Fantasma>::iterator> infoFantasmasVivos;
+        algo2::linear_set<list<InfoFan>::iterator> infoFantasmasVivos;
         list<PosYDir>::iterator infoFantasmaEspecial;
     };
 
