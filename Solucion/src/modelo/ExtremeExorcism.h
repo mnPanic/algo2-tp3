@@ -51,11 +51,19 @@ private:
         list<pair<Jugador, PosYDir>>::iterator infoActual;
     };
 
+    struct InfoActualPJ {
+        string id;
+        Pos pos;
+        Dir dir;
+    };
+
     struct InfoFan {
         vector<Evento> eventos;
         bool vivo;
         list<PosYDir>::iterator infoActual;
     };
+
+    typedef PosYDir InfoActualFan;
 
     struct PasoDisparo {
         int fan;
@@ -74,14 +82,14 @@ private:
 
         //Jugadores
         string_map<InfoPJ> infoJugadores;
-        list<pair<Jugador, PosYDir>> infoActualJugadoresVivos;
+        list<InfoActualPJ> infoActualJugadoresVivos;
         algo2::linear_set<InfoPJ*> infoJugadoresVivos;
 
         //Fantasmas
         list<InfoFan> infoFantasmas;
-        list<PosYDir> infoActualFantasmasVivos;
+        list<InfoActualFan> infoActualFantasmasVivos;
         algo2::linear_set<list<InfoFan>::iterator> infoFantasmasVivos;
-        list<PosYDir>::iterator infoFantasmaEspecial;
+        list<InfoActualFan>::iterator infoFantasmaEspecial;
     };
 
     Juego juego;
