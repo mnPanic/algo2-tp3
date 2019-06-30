@@ -78,18 +78,18 @@ private:
 
         //Disparos
         vector<vector<PasoDisparo>> mapaDisparos;
-        set<Pos> disparosFanUltimoPaso;
+        algo2::linear_set<Pos> disparosFanUltimoPaso;
 
         //Jugadores
         string_map<InfoPJ> infoJugadores;
-        list<InfoActualPJ> infoActualJugadoresVivos;
+        algo2::linear_set<InfoActualPJ> infoActualJugadoresVivos;
         algo2::linear_set<InfoPJ*> infoJugadoresVivos;
 
         //Fantasmas
-        list<InfoFan> infoFantasmas;
-        list<InfoActualFan> infoActualFantasmasVivos;
-        algo2::linear_set<list<InfoFan>::iterator> infoFantasmasVivos;
-        list<InfoActualFan>::iterator infoFantasmaEspecial;
+        algo2::linear_set<InfoFan> infoFantasmas;
+        algo2::linear_set<InfoActualFan> infoActualFantasmasVivos;
+        algo2::linear_set<algo2::linear_set<InfoFan>::iterator> infoFantasmasVivos;
+        algo2::linear_set<InfoActualFan>::iterator infoFantasmaEspecial;
     };
 
     Juego juego;
