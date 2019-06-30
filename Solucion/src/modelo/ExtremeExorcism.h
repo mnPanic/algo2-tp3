@@ -45,25 +45,25 @@ public:
   const list<Fantasma> &fantasmas() const;
 
 private:
-    struct InfoPJ {
-        list<Evento> eventos;
-        bool vivo;
-        list<pair<Jugador, PosYDir>>::iterator infoActual;
-    };
-
     struct InfoActualPJ {
         string id;
         Pos pos;
         Dir dir;
     };
 
-    struct InfoFan {
-        vector<Evento> eventos;
+    struct InfoPJ {
+        list<Evento> eventos;
         bool vivo;
-        list<PosYDir>::iterator infoActual;
+        algo2::linear_set<InfoActualPJ>::iterator infoActual;
     };
 
     typedef PosYDir InfoActualFan;
+
+    struct InfoFan {
+        vector<Evento> eventos;
+        bool vivo;
+        algo2::linear_set<InfoActualFan>::iterator infoActual;
+    };
 
     struct PasoDisparo {
         int fan;
