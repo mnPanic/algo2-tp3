@@ -14,7 +14,6 @@
 #include <modulos_basicos/linear_set.h>
 
 using namespace std;
-using pasoDisparos = pair<int, int>;
 
 class ExtremeExorcism {
 public:
@@ -58,6 +57,11 @@ private:
         list<PosYDir>::iterator infoActual;
     };
 
+    struct PasoDisparo {
+        int fan;
+        int pj;
+    };
+
     struct Juego {
         //General
         int paso;
@@ -65,7 +69,7 @@ private:
         Habitacion mapa;
 
         //Disparos
-        vector<vector<pasoDisparos>> mapaDisparos;
+        vector<vector<PasoDisparo>> mapaDisparos;
         set<Pos> disparosFanUltimoPaso;
 
         //Jugadores
