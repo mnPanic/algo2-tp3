@@ -1,7 +1,16 @@
 #include "ExtremeExorcism.h"
 
 ExtremeExorcism::ExtremeExorcism(Habitacion h, set<Jugador> jugadores, PosYDir f_init, list<Accion> acciones_fantasma,
-        Contexto *ctx) {}
+        Contexto *ctx){
+    this->ctx = *ctx;
+    this->juego.mapa = h;
+    this->juego.paso = 0;
+    this->juego.ronda = 0;
+    vector<PasoDisparo> v1 (h.tam(), PasoDisparo(0,0));
+    this->juego.mapaDisparos = vector<vector<PasoDisparo>>(h.tam(), v1);
+    this->juego.disparosFanUltimoPaso = algo2::linear_set<Pos>();
+    //COMPLETAR
+}
 
 void ExtremeExorcism::pasar() {}
 
@@ -386,3 +395,6 @@ PosYDir ExtremeExorcism::posicionJugador(Jugador j) const {}
 const set<Jugador>& ExtremeExorcism::jugadores() const {}
 
 const list<Fantasma>& ExtremeExorcism::fantasmas() const {}
+
+ExtremeExorcism::PasoDisparo::PasoDisparo(int i, int i1) : fan(i), pj(i1) {}
+

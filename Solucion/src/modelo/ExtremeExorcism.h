@@ -68,12 +68,15 @@ private:
     };
 
     struct PasoDisparo {
+        PasoDisparo(int i, int i1);
+
         int fan;
         int pj;
     };
 
     struct Juego {
-        //General
+
+//General
         int paso;
         int ronda;
         Habitacion mapa;
