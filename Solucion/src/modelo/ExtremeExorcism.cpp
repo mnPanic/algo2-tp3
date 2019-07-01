@@ -5,6 +5,24 @@ ExtremeExorcism::ExtremeExorcism(Habitacion h, set<Jugador> jugadores, PosYDir f
     //COMPLETAR CON CONSTRUCTOR
 }
 
+ExtremeExorcism::Juego::Juego(Habitacion h) : paso(0), ronda(0), mapa(h)
+//                                              mapaDisparos(vector<vector<PasoDisparo>> (h.tam(),vector<PasoDisparo>(h.tam(), PasoDisparo(0,0)))),
+//                                              disparosFanUltimoPaso(algo2::linear_set<Pos>()),
+//                                              infoJugadores(string_map<InfoPJ>()),
+//                                              infoActualJugadoresVivos(algo2::linear_set<InfoActualPJ>()),
+//                                              infoJugadoresVivos(algo2::linear_set<InfoPJ*>()),
+//                                              infoFantasmas(algo2::linear_set<InfoFan>()),
+//                                              infoActualFantasmasVivos(algo2::linear_set<InfoActualFan>()),
+//                                              infoFantasmasVivos(algo2::linear_set<algo2::linear_set<InfoFan>::iterator>()),
+// infoFantasmaEspecial(algo2::linear_set<InfoActualFan>::iterator infoActualFantasmasVivos)
+//                                              infoFantasmaEspecial() {}
+{}
+ExtremeExorcism::PasoDisparo::PasoDisparo(int pj, int fan) : pj(pj), fan(fan) {}
+
+
+
+
+
 void ExtremeExorcism::pasar() {}
 
 void ExtremeExorcism::ejecutarAccion(Jugador j, Accion a) {
@@ -398,29 +416,27 @@ list<PosYDir> ExtremeExorcism::disparosFantasmas() const {}
 
 set<Pos> ExtremeExorcism::posicionesDisparadas() const {}
 
-bool ExtremeExorcism::jugadorVivo(Jugador j) const {}
+bool ExtremeExorcism::jugadorVivo(Jugador j) const {
+    InfoPJ iPj = juego.infoJugadores.at(j); // O(|j|)
+    return iPj.vivo;
+}
 
-const Habitacion& ExtremeExorcism::habitacion() const {}
+const Habitacion& ExtremeExorcism::habitacion() const {
+    return juego.mapa; // O(1)
+}
 
-PosYDir ExtremeExorcism::posicionJugador(Jugador j) const {}
+PosYDir ExtremeExorcism::posicionJugador(Jugador j) const {
+    InfoPJ iPj = juego.infoJugadores.at(j); // O(|j|)
+    return iPj.infoActual->local; // O(1)
+}
 
-const set<Jugador>& ExtremeExorcism::jugadores() const {}
+const set<Jugador>& ExtremeExorcism::jugadores() const {
+    // TODO: Función Claves() en stringMap.
+}
 
-const list<Fantasma>& ExtremeExorcism::fantasmas() const {}
+const list<Fantasma>& ExtremeExorcism::fantasmas() const {
+    list<Fantasma> l;
+    for (InfoFan f : juego.infoFantasmas){
 
-ExtremeExorcism::PasoDisparo::PasoDisparo(int pj, int fan) : pj(pj), fan(fan) {}
-
-ExtremeExorcism::Juego::Juego(Habitacion h) :
-    paso(0),
-    ronda(0),
-    mapa(h),
-    mapaDisparos(vector<vector<PasoDisparo>> (h.tam(),vector<PasoDisparo>(h.tam(), PasoDisparo(0,0)))),
-    disparosFanUltimoPaso(algo2::linear_set<Pos>()),
-    infoJugadores(string_map<InfoPJ>()),
-    infoActualJugadoresVivos(algo2::linear_set<InfoActualPJ>()),
-    infoJugadoresVivos(algo2::linear_set<InfoPJ*>()),
-    infoFantasmas(algo2::linear_set<InfoFan>()),
-    infoActualFantasmasVivos(algo2::linear_set<InfoActualFan>()),
-    infoFantasmasVivos(algo2::linear_set<algo2::linear_set<InfoFan>::iterator>()),
-    // infoFantasmaEspecial(algo2::linear_set<InfoActualFan>::iterator infoActualFantasmasVivos)
-    infoFantasmaEspecial() {}
+    }
+}

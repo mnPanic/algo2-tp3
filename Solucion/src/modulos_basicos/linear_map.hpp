@@ -149,7 +149,7 @@ bool linear_map<K, S>::clear() {
 }
 
 template<class K, class S>
-typename linear_map<K, S>::iterator linear_map<K, S>::erase(linear_map::iterator &it) {
+typename linear_map<K, S>::iterator linear_map<K, S>::erase2(linear_map::iterator &it) {
     _elems.erase(it);
     return it++;
 }
