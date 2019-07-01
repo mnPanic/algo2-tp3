@@ -231,6 +231,29 @@ class linear_map {
    */
   bool operator==(const linear_map& other) const;
 
+
+
+
+
+
+
+
+    /*****************Funcion Nuestra****************/
+    /**
+   * @brief Elimina el diccionario
+   *
+   * \pre d == \P{this}
+   * \post \P{this} == vacio
+   *
+   * \complexity{\O(1)}
+   */
+    bool clear();
+/*****************End Funcion Nuestra****************/
+
+
+
+
+
  private:
   /**
    * \name Representación:

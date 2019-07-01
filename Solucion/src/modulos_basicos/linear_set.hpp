@@ -120,3 +120,11 @@ std::ostream &operator<<(std::ostream &os, const linear_set<T> &s) {
   os << " }";
   return os;
 }
+
+/*****************Funcion Nuestra****************/
+template<typename T>
+bool linear_set<T>::clear() {
+    _elems.clear();
+    return true;
+}
+/*****************End Funcion Nuestra****************/

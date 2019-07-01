@@ -131,7 +131,7 @@ class linear_set {
    *
    * \complexity{\O(#claves(\P{this}))}
    */
-  size_type erase(const T &x); 
+  size_type erase(const T &x);
 
   /**
    * @brief Devuelve un iterador relacionado al valor buscado.
@@ -203,6 +203,25 @@ class linear_set {
    * \complexity{\O(1)}
    */
   const_iterator end() const;
+
+
+
+
+
+
+    /*****************Funcion Nuestra****************/
+        /**
+   * @brief Destructor del linear_set
+   *
+   * \pre true
+   * \post \P{res} es vacío
+   *
+   * \complexity{\O(n)}
+   */
+  bool clear();
+/*****************End Funcion Nuestra****************/
+
+
 
  private:
   /**

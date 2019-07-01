@@ -137,3 +137,15 @@ std::ostream &operator<<(std::ostream &os, const linear_map<K, S>& m) {
 }
 
 
+
+
+/*****************Funcion Nuestra****************/
+template<class K, class S>
+bool linear_map<K, S>::clear() {
+    for (auto it = _elems.begin(); it != _elems.end(); it++) {
+        _elems.erase(it);
+    }
+    return true;
+}
+/*****************End Funcion Nuestra****************/
+
