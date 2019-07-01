@@ -103,9 +103,9 @@ class linear_set<T>::iterator {
  public:
   using value_type = const linear_set::value_type;
   using iterator_category = std::forward_iterator_tag;
-  using reference = value_type&;                                                                                           
-  using pointer = value_type*;                                                                                               
-  using difference_type = std::ptrdiff_t;               
+  using reference = value_type&;
+  using pointer = value_type*;
+  using difference_type = std::ptrdiff_t;
 
   /**
    * @brief Constructor por copia del iterador.
@@ -113,7 +113,7 @@ class linear_set<T>::iterator {
    * \complexity{\O(1)}
    */
   iterator(const typename linear_set<T>::iterator&);
-  
+
   /**
    * @brief Avanza el iterador una posición.
    *
@@ -150,7 +150,7 @@ class linear_set<T>::iterator {
   const value_type* operator->() const;
 
   /**
-   * @brief Comparación entre iteradores 
+   * @brief Comparación entre iteradores
    *
    * \pre ambos iteradores refieren a la misma colección
    * \post true sii los iteradores apuntan al mismo elemento
@@ -160,7 +160,7 @@ class linear_set<T>::iterator {
   bool operator==(const linear_set<T>::iterator &other) const;
 
   /**
-   * @brief Comparación entre iteradores 
+   * @brief Comparación entre iteradores
    *
    * \pre ambos iteradores refieren a la misma colección
    * \post true sii los iteradores no apuntan al mismo elemento
@@ -168,8 +168,8 @@ class linear_set<T>::iterator {
    * \complexity{\O(1)}
    */
   bool operator!=(const linear_set<T>::iterator &other) const;
-  
- private:
+
+private:
   friend class linear_set<T>;
 
   /**

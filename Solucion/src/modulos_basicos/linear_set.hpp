@@ -127,4 +127,10 @@ bool linear_set<T>::clear() {
     _elems.clear();
     return true;
 }
+
+template<typename T>
+typename linear_set<T>::iterator linear_set<T>::erase(iterator &it) {
+    _elems.erase(it);
+    return it;
+}
 /*****************End Funcion Nuestra****************/

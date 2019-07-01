@@ -219,6 +219,17 @@ class linear_set {
    * \complexity{\O(n)}
    */
   bool clear();
+
+    /**
+   * @brief Elimina el valor del conjunto. Devuelve un iterador al próximo elmento
+   *
+   * \pre el iterador es válido
+   * \post \P{this} == c - {siguiente(It)}
+   *
+   * \complexity{\O(1)}
+   */
+    iterator erase(iterator &it);
+
 /*****************End Funcion Nuestra****************/
 
 
