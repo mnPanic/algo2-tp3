@@ -20,12 +20,14 @@ public:
   ExtremeExorcism(Habitacion h, set<Jugador> jugadores, PosYDir f_init,
                   list<Accion> acciones_fantasma, Contexto *ctx);
 
-  void pasar(); //O(#fv ∗ m + #jv)
+  // Actualiza sin acción del jugador.
+  // O(#fv * m + #jv)
+  void pasar();
 
   // Actualiza con acción del jugador.
   //  - Sin pasar de ronda: O(|pj| + #fv * m + #jv)
   //  - Pasando de ronda:   O(|pj| + m^2 + #f + locJugadores + #j * (|maxPj| + long(maxEvt))
-  void ejecutarAccion(Jugador j, Accion a); //O(|pj| + m*#fv #jv)
+  void ejecutarAccion(Jugador j, Accion a);
 
   list<pair<Jugador, PosYDir>> posicionJugadores() const; //O(1)
 

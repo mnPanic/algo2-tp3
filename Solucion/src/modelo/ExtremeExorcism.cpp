@@ -5,7 +5,23 @@ ExtremeExorcism::ExtremeExorcism(Habitacion h, set<Jugador> jugadores, PosYDir f
     //COMPLETAR CON CONSTRUCTOR
 }
 
-void ExtremeExorcism::pasar() {}
+void ExtremeExorcism::pasar() {
+    // Incremento el paso
+    juego.paso++; // O(1)
+
+    // Reinicio los disparos de los fantasmas
+    reiniciarDisparosFan();         // O(1)
+
+    // Actualizo las acciones de los fantasmas, actualizando el mapa de
+    // disparos si es que disparan
+    actualizarFantasmas();          // O(#fv * m)
+
+    // Veo que jugadores mueren
+    chequearMuerteJugadores();      // O(#jv)
+
+    // Agrego los 'pasar' faltantes
+    agregarPasarFaltantes();        // O(#jv)
+}
 
 void ExtremeExorcism::ejecutarAccion(Jugador j, Accion a) {
     // Incremento el paso
