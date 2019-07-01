@@ -69,7 +69,7 @@ private:
     };
 
     struct PasoDisparo {
-        PasoDisparo(int i, int i1);
+        PasoDisparo(int pj, int fan);
 
         int fan;
         int pj;

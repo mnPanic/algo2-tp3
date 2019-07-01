@@ -17,8 +17,7 @@ ExtremeExorcism::Juego::Juego(Habitacion h) : paso(0), ronda(0), mapa(h)
 // infoFantasmaEspecial(algo2::linear_set<InfoActualFan>::iterator infoActualFantasmasVivos)
 //                                              infoFantasmaEspecial() {}
 {}
-ExtremeExorcism::PasoDisparo::PasoDisparo(int i, int i1) : fan(i), pj(i1) {}
-
+ExtremeExorcism::PasoDisparo::PasoDisparo(int pj, int fan) : pj(pj), fan(fan) {}
 
 
 
@@ -441,5 +440,3 @@ const list<Fantasma>& ExtremeExorcism::fantasmas() const {
 
     }
 }
-
-
