@@ -75,8 +75,9 @@ private:
     };
 
     struct Juego {
+        Juego(Habitacion h);
 
-//General
+        //General
         int paso;
         int ronda;
         Habitacion mapa;
@@ -94,7 +95,8 @@ private:
         algo2::linear_set<InfoFan> infoFantasmas;
         algo2::linear_set<InfoActualFan> infoActualFantasmasVivos;
         algo2::linear_set<algo2::linear_set<InfoFan>::iterator> infoFantasmasVivos;
-        algo2::linear_set<InfoActualFan>::iterator infoFantasmaEspecial;
+        //algo2::linear_set<InfoActualFan>::iterator infoFantasmaEspecial;
+        InfoActualFan* infoFantasmaEspecial;
     };
 
     Juego juego;

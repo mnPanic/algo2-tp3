@@ -12,6 +12,7 @@ using namespace std;
 class Habitacion {
 public:
     Habitacion(unsigned int tam, const set<Pos>& ocupadas);
+    Habitacion(Habitacion &h);
 
     unsigned int tam() const;
 
