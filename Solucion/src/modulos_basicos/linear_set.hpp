@@ -51,7 +51,7 @@ typename linear_set<T>::size_type linear_set<T>::size() const {
 }
   
 template<class T>
-typename linear_set<T>::size_type linear_set<T>::erase(const T &x) {
+typename linear_set<T>::size_type linear_set<T>::eraseKey(const T &x){
   return _elems.erase(x);
 }
 
@@ -129,8 +129,7 @@ bool linear_set<T>::clear() {
 }
 
 template<typename T>
-typename linear_set<T>::iterator linear_set<T>::erase(iterator &it) {
-    _elems.erase(it);
-    return it;
+typename linear_set<T>::iterator linear_set<T>::erase(iterator &iterator) {
+    return _elems.erase2(iterator.it);
 }
 /*****************End Funcion Nuestra****************/
