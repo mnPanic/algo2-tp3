@@ -408,7 +408,7 @@ const set<Jugador>& ExtremeExorcism::jugadores() const {}
 
 const list<Fantasma>& ExtremeExorcism::fantasmas() const {}
 
-ExtremeExorcism::PasoDisparo::PasoDisparo(int i, int i1) : fan(i), pj(i1) {}
+ExtremeExorcism::PasoDisparo::PasoDisparo(int pj, int fan) : pj(pj), fan(fan) {}
 
 ExtremeExorcism::Juego::Juego(Habitacion h) :
     paso(0),
