@@ -1,7 +1,9 @@
 #include "ExtremeExorcism.h"
 
 ExtremeExorcism::ExtremeExorcism(Habitacion h, set<Jugador> jugadores, PosYDir f_init, list<Accion> acciones_fantasma,
-        Contexto *ctx) {}
+        Contexto *ctx) : juego(h), ctx(*ctx) {
+    //COMPLETAR CON CONSTRUCTOR
+}
 
 void ExtremeExorcism::pasar() {}
 
@@ -56,7 +58,13 @@ ExtremeExorcism::InfoPJ& ExtremeExorcism::actualizarPJ(Jugador j, Accion a) {
     infoPJ.eventos.push_back(eventoPJ);
 
     // Actualizo su info actual
-    infoPJ.infoActual->local = PosYDir(eventoPJ.pos, eventoPJ.dir);
+
+    /* infoPJ.infoActual->local = PosYDir(eventoPJ.pos, eventoPJ.dir);
+     * Lo de arriba no vale porque -> devuelve un puntero const, es más bizarro. El * devuelve una referencia al valor apuntado.
+     */
+    InfoActualPJ iap = *infoPJ.infoActual;
+    iap.local = PosYDir(eventoPJ.pos, eventoPJ.dir);
+
 
     // Devuelvo la info
     return infoPJ;
@@ -155,7 +163,8 @@ bool ExtremeExorcism::muereFan(linear_set<linear_set<InfoFan>::iterator>::iterat
     linear_set<InfoActualFan>::iterator itInfoActual = infoFan.infoActual;      // O(1)
 
     // Veo si era el especial
-    bool eraEspecial = (itInfoActual == juego.infoFantasmaEspecial);    // O(1)
+    InfoActualFan info = *(juego.infoFantasmaEspecial);
+    bool eraEspecial = (*itInfoActual == info);    // O(1)
 
     // Lo borro de infoActualFantasmasVivos
     juego.infoActualFantasmasVivos.erase(itInfoActual);                 // O(1)
@@ -210,7 +219,7 @@ void ExtremeExorcism::reiniciarFantasmas() {
          itInfoFan != juego.infoFantasmas.end();
          ++itInfoFan){  // O(#f)
         // Obtengo su info
-        InfoFan& info = *itInfoFan;
+        InfoFan info = *itInfoFan;
 
         // Lo seteo como vivo;
         info.vivo = true;
@@ -300,8 +309,20 @@ Evento ExtremeExorcism::actualizarFan(InfoFan info, int paso) {
     algo2::linear_set<InfoActualFan>::iterator& itInfoActual = info.infoActual;
 
     // La actualizo con el evento actual
+    InfoActualFan iaf = *itInfoActual;
+    iaf.pos = evtActual.pos;
+    iaf.dir = evtActual.dir;
+
+    /* Esto de acá no me cierra:
+    Pos p = itInfoActual->pos; //Supuestamente el operador -> devuelve una referencia así que p debería ser aliasing de itInfoActual->pos
+    Dir d = itInfoActual->dir; //Lo mismo que arriba.
+    p = evtActual.pos;
+    d = evtActual.dir;
+
+    Esto no vale:
     itInfoActual->pos = evtActual.pos;
     itInfoActual->dir = evtActual.dir;
+     */
 
     // Devuelvo el evento actual
     return evtActual;
@@ -386,3 +407,17 @@ PosYDir ExtremeExorcism::posicionJugador(Jugador j) const {}
 const set<Jugador>& ExtremeExorcism::jugadores() const {}
 
 const list<Fantasma>& ExtremeExorcism::fantasmas() const {}
+
+ExtremeExorcism::PasoDisparo::PasoDisparo(int i, int i1) : fan(i), pj(i1) {}
+
+ExtremeExorcism::Juego::Juego(Habitacion h) : paso(0), ronda(0), mapa(h),
+mapaDisparos(vector<vector<PasoDisparo>> (h.tam(),vector<PasoDisparo>(h.tam(), PasoDisparo(0,0)))),
+disparosFanUltimoPaso(algo2::linear_set<Pos>()),
+infoJugadores(string_map<InfoPJ>()),
+infoActualJugadoresVivos(algo2::linear_set<InfoActualPJ>()),
+infoJugadoresVivos(algo2::linear_set<InfoPJ*>()),
+infoFantasmas(algo2::linear_set<InfoFan>()),
+infoActualFantasmasVivos(algo2::linear_set<InfoActualFan>()),
+infoFantasmasVivos(algo2::linear_set<algo2::linear_set<InfoFan>::iterator>()),
+// infoFantasmaEspecial(algo2::linear_set<InfoActualFan>::iterator infoActualFantasmasVivos)
+infoFantasmaEspecial() {}

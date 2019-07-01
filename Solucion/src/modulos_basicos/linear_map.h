@@ -231,6 +231,40 @@ class linear_map {
    */
   bool operator==(const linear_map& other) const;
 
+
+
+
+
+
+
+
+    /*****************Funcion Nuestra****************/
+    /**
+   * @brief Elimina el diccionario
+   *
+   * \pre d == \P{this}
+   * \post \P{this} == vacio
+   *
+   * \complexity{\O(1)}
+   */
+    bool clear();
+
+    /**
+   * @brief Elimina el valor del diccionario. Devuelve un iterador al próximo
+   *
+   * \pre el iterador es válido
+   * \post \P{this} == d - {siguiente(It)}
+   *
+   * \complexity{\O(1)}
+   */
+    iterator erase(iterator &it);
+
+/*****************End Funcion Nuestra****************/
+
+
+
+
+
  private:
   /**
    * \name Representación:

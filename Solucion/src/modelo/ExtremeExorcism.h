@@ -68,11 +68,15 @@ private:
     };
 
     struct PasoDisparo {
+        PasoDisparo(int i, int i1);
+
         int fan;
         int pj;
     };
 
     struct Juego {
+        Juego(Habitacion h);
+
         //General
         int paso;
         int ronda;
@@ -91,7 +95,8 @@ private:
         algo2::linear_set<InfoFan> infoFantasmas;
         algo2::linear_set<InfoActualFan> infoActualFantasmasVivos;
         algo2::linear_set<algo2::linear_set<InfoFan>::iterator> infoFantasmasVivos;
-        algo2::linear_set<InfoActualFan>::iterator infoFantasmaEspecial;
+        //algo2::linear_set<InfoActualFan>::iterator infoFantasmaEspecial;
+        InfoActualFan* infoFantasmaEspecial;
     };
 
     Juego juego;

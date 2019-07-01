@@ -131,7 +131,7 @@ class linear_set {
    *
    * \complexity{\O(#claves(\P{this}))}
    */
-  size_type erase(const T &x); 
+  size_type erase(const T &x);
 
   /**
    * @brief Devuelve un iterador relacionado al valor buscado.
@@ -203,6 +203,36 @@ class linear_set {
    * \complexity{\O(1)}
    */
   const_iterator end() const;
+
+
+
+
+
+
+    /*****************Funcion Nuestra****************/
+        /**
+   * @brief Destructor del linear_set
+   *
+   * \pre true
+   * \post \P{res} es vacío
+   *
+   * \complexity{\O(n)}
+   */
+  bool clear();
+
+    /**
+   * @brief Elimina el valor del conjunto. Devuelve un iterador al próximo elmento
+   *
+   * \pre el iterador es válido
+   * \post \P{this} == c - {siguiente(It)}
+   *
+   * \complexity{\O(1)}
+   */
+    iterator erase(iterator &it);
+
+/*****************End Funcion Nuestra****************/
+
+
 
  private:
   /**

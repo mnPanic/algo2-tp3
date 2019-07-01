@@ -11,7 +11,8 @@ using namespace std;
 
 class Habitacion {
 public:
-    Habitacion(unsigned int tam, set<Pos> ocupadas);
+    Habitacion(unsigned int tam, const set<Pos>& ocupadas);
+    Habitacion(Habitacion &h);
 
     unsigned int tam() const;
 
@@ -24,7 +25,7 @@ private:
 
     vector<vector<bool>> casilleros;
 
-    int tamanio; //Escribir con enie
+    int tamanio;
 };
 
 
