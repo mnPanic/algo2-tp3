@@ -86,8 +86,8 @@ vector<Evento> ExtremeExorcism::eventosFanInicial(const list<Accion>& l, PosYDir
     vector<Evento> f;
     Evento anterior = Evento(pd.pos, pd.dir, false); // OJO, ESTO PODRÍA NO IR Y QUE EL INICIAL SEA APLICAR DE LA PRIMER ACCIÓN
     f.push_back(anterior);
-    for(auto it = l.begin(); it != l.end(); it++){
-        f.push_back(aplicar(*it, anterior));
+    for(Accion a : l){
+        f.push_back(aplicar(a, anterior));
     }
     return f;
 }
