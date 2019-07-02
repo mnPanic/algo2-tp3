@@ -148,3 +148,8 @@ template <typename T>
 bool string_map<T>::empty() const{
     return raiz == NULL || (cantHijos(raiz) == 0 && raiz->definicion == NULL);
 }
+
+template<typename T>
+const set<string>& string_map<T>::claves() const {
+    return _claves;
+}
