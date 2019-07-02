@@ -406,9 +406,21 @@ void ExtremeExorcism::agregarPasarFaltantes() {
         }
     }
 }
-list<pair<Jugador, PosYDir>> ExtremeExorcism::posicionJugadores() const {}
+list<pair<Jugador, PosYDir>> ExtremeExorcism::posicionJugadores() const {
+    /*Observación:
+     * En el TP2 devolvemos el conjLineal por referencia pero como aquí piden devolver una lista, hacemos la conversión en O(n).
+     * (Esto fue consultado con Lean y dijo que estaba bien)
+     */
+    list<pair<Jugador, PosYDir>> res;
+    for(InfoActualPJ infoPJ : juego.infoActualJugadoresVivos){
+        res.emplace_back(make_pair(infoPJ.id, infoPJ.local));
+    }
+    return res;
+}
 
-list<PosYDir> ExtremeExorcism::posicionFantasmas() const {}
+list<PosYDir> ExtremeExorcism::posicionFantasmas() const {
+
+}
 
 PosYDir ExtremeExorcism::posicionEspecial() const {}
 
