@@ -70,8 +70,8 @@ ExtremeExorcism::InfoPJ& ExtremeExorcism::actualizarPJ(Jugador j, Accion a) {
     InfoPJ& infoPJ = juego.infoJugadores.at(j);
 
     // Genero un evento con la acción y el evento anterior
-    Evento eventoPJ = aplicar(a, j, eventoActualPJ(infoPJ));
-
+    Evento eventoPJ = eventoActualPJ(infoPJ); // ESTA LINEA LA AGREGUÉ YO PARA QUE NO TIRE ERROR LO DE ABAJO.
+    //Evento eventoPJ = aplicar(a, j, eventoActualPJ(infoPJ)); TODO: REVISAR ARIDAD PORQUE APLICAR RECIBE JUEGO, NO JUGADOR.
     // Agrego el evento al jugador
     infoPJ.eventos.push_back(eventoPJ);
 
@@ -435,8 +435,82 @@ const set<Jugador>& ExtremeExorcism::jugadores() const {
 }
 
 const list<Fantasma>& ExtremeExorcism::fantasmas() const {
-    list<Fantasma> l;
-    for (InfoFan f : juego.infoFantasmas){
+    list<Fantasma> l; // O(1)
+    auto it = l.begin(); // O(1)
+    for (InfoFan f : juego.infoFantasmas){ // O(fs*|maxEv|)
+        l.insert(it, vecToList(f.eventos)); // O(|Ev|)
+        it++; // O(1)
+    }
+}
 
+list<Evento> ExtremeExorcism::vecToList(vector<Evento> vector) const {
+    list<Evento> l;
+    auto it = l.begin();
+    for (int i = 0; i < vector.size(); ++i) {
+        l.insert(it, vector[i]);
+        it++;
+    }
+    return l;
+}
+
+vector<Evento> ExtremeExorcism::vectorizar(list<Evento> l) {
+    vector<Evento> v;
+    for (auto it = l.begin(); it != l.end(); it++) {
+        v.push_back(*it);
+    }
+    return v;
+}
+
+Pos ExtremeExorcism::avanzar(Pos p, Dir d) {
+    Pos pos = Pos();
+    switch (d)
+    {
+        case ARRIBA:
+            pos = Pos(p.first + 1, p.second);
+            break;
+        case ABAJO:
+            pos = Pos(p.first - 1, p.second);
+            break;
+        case IZQUIERDA:
+            pos = Pos(p.first, p.second - 1);
+            break;
+        case DERECHA:
+            pos = Pos(p.first, p.second + 1);
+            break;
+    }
+    return pos;
+}
+
+Evento ExtremeExorcism::aplicar(Accion a, const Juego& j, Evento eventoActual) {
+    Pos prox;
+    switch (a) {
+        case DISPARAR:
+            return Evento(eventoActual.pos, eventoActual.dir, true);
+        case ESPERAR:
+            return Evento(eventoActual.pos, eventoActual.dir, false);
+        case MARRIBA:
+            prox = avanzar(eventoActual.pos, ARRIBA);
+            if(j.mapa.valida(prox) && j.mapa.ocupado(prox)){
+                return Evento(prox, ARRIBA, false);
+            }
+            return Evento(eventoActual.pos, ARRIBA, false);
+        case MABAJO:
+            prox = avanzar(eventoActual.pos, ABAJO);
+            if(j.mapa.valida(prox) && j.mapa.ocupado(prox)){
+                return Evento(prox, ABAJO, false);
+            }
+            return Evento(eventoActual.pos, ABAJO, false);
+        case MDERECHA:
+            prox = avanzar(eventoActual.pos, DERECHA);
+            if(j.mapa.valida(prox) && j.mapa.ocupado(prox)){
+                return Evento(prox, DERECHA, false);
+            }
+            return Evento(eventoActual.pos, DERECHA, false);
+        case MIZQUIERDA:
+            prox = avanzar(eventoActual.pos, IZQUIERDA);
+            if(j.mapa.valida(prox) && j.mapa.ocupado(prox)){
+                return Evento(prox, IZQUIERDA, false);
+            }
+            return Evento(eventoActual.pos, IZQUIERDA, false);
     }
 }

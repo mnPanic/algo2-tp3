@@ -211,11 +211,12 @@ private:
     // O(n)
     vector<Evento> vectorizar(list<Evento> l);
 
-    // TODO: Mover a acción?
-    Evento aplicar(Accion a, Jugador j, Evento eventoActual);
+    // TODO: Mover a acción? NO, DEJÉMOSLÓ ACÁ PORQUE APLICAR RECIBE UN JUEGO.
+    Evento aplicar(Accion a, const Juego& j, Evento eventoActual);
     Pos avanzar(Pos p, Dir d);
 
 
+    list<Evento> vecToList(vector<Evento> vector) const;
 };
 
 #endif
