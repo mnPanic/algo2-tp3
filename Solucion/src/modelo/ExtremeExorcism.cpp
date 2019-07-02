@@ -436,7 +436,9 @@ list<PosYDir> ExtremeExorcism::posicionFantasmas() const {
     return res;
 }
 
-PosYDir ExtremeExorcism::posicionEspecial() const {}
+PosYDir ExtremeExorcism::posicionEspecial() const {
+    return PosYDir(juego.infoFantasmaEspecial->pos, juego.infoFantasmaEspecial->dir);
+}
 
 list<PosYDir> ExtremeExorcism::disparosFantasmas() const {}
 
