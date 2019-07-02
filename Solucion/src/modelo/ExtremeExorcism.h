@@ -212,7 +212,7 @@ private:
     vector<Evento> vectorizar(list<Evento> l);
 
     // TODO: Mover a acción? NO, DEJÉMOSLÓ ACÁ PORQUE APLICAR RECIBE UN JUEGO.
-    Evento aplicar(Accion a, const Juego& j, Evento eventoActual);
+    Evento aplicar(Accion a, Evento eventoActual);
     Pos avanzar(Pos p, Dir d);
 
 

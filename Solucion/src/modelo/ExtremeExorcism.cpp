@@ -5,11 +5,10 @@ ExtremeExorcism::ExtremeExorcism(Habitacion h, set<Jugador> jugadores, PosYDir f
     //COMPLETAR CON CONSTRUCTOR
 }
 
-ExtremeExorcism::Juego::Juego(Habitacion h) : paso(0), ronda(0), mapa(h)
-//                                              mapaDisparos(vector<vector<PasoDisparo>> (h.tam(),vector<PasoDisparo>(h.tam(), PasoDisparo(0,0)))),
+ExtremeExorcism::Juego::Juego(Habitacion h) : paso(0), ronda(0), mapa(h), mapaDisparos(vector<vector<PasoDisparo>> (h.tam(),vector<PasoDisparo>(h.tam(), PasoDisparo(0,0))))
 //                                              disparosFanUltimoPaso(algo2::linear_set<Pos>()),
 //                                              infoJugadores(string_map<InfoPJ>()),
-//                                              infoActualJugadoresVivos(algo2::linear_set<InfoActualPJ>()),
+//                                              infoActualJugadoresVivosq(algo2::linear_set<InfoActualPJ>()),
 //                                              infoJugadoresVivos(algo2::linear_set<InfoPJ*>()),
 //                                              infoFantasmas(algo2::linear_set<InfoFan>()),
 //                                              infoActualFantasmasVivos(algo2::linear_set<InfoActualFan>()),
@@ -70,8 +69,7 @@ ExtremeExorcism::InfoPJ& ExtremeExorcism::actualizarPJ(Jugador j, Accion a) {
     InfoPJ& infoPJ = juego.infoJugadores.at(j);
 
     // Genero un evento con la acción y el evento anterior
-    Evento eventoPJ = eventoActualPJ(infoPJ); // ESTA LINEA LA AGREGUÉ YO PARA QUE NO TIRE ERROR LO DE ABAJO.
-    //Evento eventoPJ = aplicar(a, j, eventoActualPJ(infoPJ)); TODO: REVISAR ARIDAD PORQUE APLICAR RECIBE JUEGO, NO JUGADOR.
+    Evento eventoPJ = aplicar(a, eventoActualPJ(infoPJ));
     // Agrego el evento al jugador
     infoPJ.eventos.push_back(eventoPJ);
 
@@ -331,17 +329,6 @@ Evento ExtremeExorcism::actualizarFan(InfoFan info, int paso) {
     iaf.pos = evtActual.pos;
     iaf.dir = evtActual.dir;
 
-    /* Esto de acá no me cierra:
-    Pos p = itInfoActual->pos; //Supuestamente el operador -> devuelve una referencia así que p debería ser aliasing de itInfoActual->pos
-    Dir d = itInfoActual->dir; //Lo mismo que arriba.
-    p = evtActual.pos;
-    d = evtActual.dir;
-
-    Esto no vale:
-    itInfoActual->pos = evtActual.pos;
-    itInfoActual->dir = evtActual.dir;
-     */
-
     // Devuelvo el evento actual
     return evtActual;
 }
@@ -481,7 +468,7 @@ Pos ExtremeExorcism::avanzar(Pos p, Dir d) {
     return pos;
 }
 
-Evento ExtremeExorcism::aplicar(Accion a, const Juego& j, Evento eventoActual) {
+Evento ExtremeExorcism::aplicar(Accion a, Evento eventoActual) {
     Pos prox;
     switch (a) {
         case DISPARAR:
@@ -490,25 +477,25 @@ Evento ExtremeExorcism::aplicar(Accion a, const Juego& j, Evento eventoActual) {
             return Evento(eventoActual.pos, eventoActual.dir, false);
         case MARRIBA:
             prox = avanzar(eventoActual.pos, ARRIBA);
-            if(j.mapa.valida(prox) && j.mapa.ocupado(prox)){
+            if(juego.mapa.valida(prox) && juego.mapa.ocupado(prox)){
                 return Evento(prox, ARRIBA, false);
             }
             return Evento(eventoActual.pos, ARRIBA, false);
         case MABAJO:
             prox = avanzar(eventoActual.pos, ABAJO);
-            if(j.mapa.valida(prox) && j.mapa.ocupado(prox)){
+            if(juego.mapa.valida(prox) && juego.mapa.ocupado(prox)){
                 return Evento(prox, ABAJO, false);
             }
             return Evento(eventoActual.pos, ABAJO, false);
         case MDERECHA:
             prox = avanzar(eventoActual.pos, DERECHA);
-            if(j.mapa.valida(prox) && j.mapa.ocupado(prox)){
+            if(juego.mapa.valida(prox) && juego.mapa.ocupado(prox)){
                 return Evento(prox, DERECHA, false);
             }
             return Evento(eventoActual.pos, DERECHA, false);
         case MIZQUIERDA:
             prox = avanzar(eventoActual.pos, IZQUIERDA);
-            if(j.mapa.valida(prox) && j.mapa.ocupado(prox)){
+            if(juego.mapa.valida(prox) && juego.mapa.ocupado(prox)){
                 return Evento(prox, IZQUIERDA, false);
             }
             return Evento(eventoActual.pos, IZQUIERDA, false);
