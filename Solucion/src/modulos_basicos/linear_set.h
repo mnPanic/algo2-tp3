@@ -131,7 +131,7 @@ class linear_set {
    *
    * \complexity{\O(#claves(\P{this}))}
    */
-  size_type erase(const T &x);
+  size_type eraseKey(const T &x);
 
   /**
    * @brief Devuelve un iterador relacionado al valor buscado.

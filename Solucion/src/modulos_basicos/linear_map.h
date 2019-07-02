@@ -257,7 +257,7 @@ class linear_map {
    *
    * \complexity{\O(1)}
    */
-    iterator erase(iterator &it);
+    iterator erase2(iterator &it);
 
 /*****************End Funcion Nuestra****************/
 
