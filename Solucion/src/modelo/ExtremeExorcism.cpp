@@ -2,7 +2,7 @@
 
 ExtremeExorcism::ExtremeExorcism(Habitacion h, set<Jugador> jugadores, PosYDir f_init, list<Accion> acciones_fantasma,
         Contexto *ctx) : juego(h), ctx(*ctx) {
-    //COMPLETAR CON CONSTRUCTOR
+
 }
 
 ExtremeExorcism::Juego::Juego(Habitacion h) : paso(0), ronda(0), mapa(h), mapaDisparos(vector<vector<PasoDisparo>> (h.tam(),vector<PasoDisparo>(h.tam(), PasoDisparo(0,0))))
@@ -17,8 +17,6 @@ ExtremeExorcism::Juego::Juego(Habitacion h) : paso(0), ronda(0), mapa(h), mapaDi
 //                                              infoFantasmaEspecial() {}
 {}
 ExtremeExorcism::PasoDisparo::PasoDisparo(int pj, int fan) : pj(pj), fan(fan) {}
-
-
 
 
 
@@ -60,11 +58,18 @@ void ExtremeExorcism::ejecutarAccion(Jugador j, Accion a) {
     }
 }
 
+void ExtremeExorcism::iniciarJugadores(const set<Jugador>&) {
+
+}
+void ExtremeExorcism::nuevoFanEspecial(const vector<Evento>& eventosFan) {
+
+}
+
 ExtremeExorcism::PasoDisparo& ExtremeExorcism::pasoDisparoEn(Pos pos) {
     return juego.mapaDisparos[pos.first][pos.second];
 }
 
-ExtremeExorcism::InfoPJ& ExtremeExorcism::actualizarPJ(Jugador j, Accion a) {
+ExtremeExorcism::InfoPJ& ExtremeExorcism::actualizarPJ(const Jugador& j, Accion a) {
     // Busco la información del PJ
     InfoPJ& infoPJ = juego.infoJugadores.at(j);
 
@@ -192,7 +197,7 @@ bool ExtremeExorcism::muereFan(linear_set<linear_set<InfoFan>::iterator>::iterat
     return eraEspecial;
 }
 
-void ExtremeExorcism::nuevaRonda(ExtremeExorcism::InfoPJ pjMatoFanEspecial) {
+void ExtremeExorcism::nuevaRonda(const ExtremeExorcism::InfoPJ& pjMatoFanEspecial) {
     // Incremento la ronda
     juego.ronda++;  // O(1)
 
@@ -317,7 +322,7 @@ void ExtremeExorcism::actualizarFantasmas() {
     }
 }
 
-Evento ExtremeExorcism::actualizarFan(InfoFan info, int paso) {
+Evento ExtremeExorcism::actualizarFan(InfoFan& info, int paso) {
     // Obtengo el evento actual
     Evento evtActual = eventoActualFan(info, paso);
 
@@ -412,7 +417,7 @@ const Habitacion& ExtremeExorcism::habitacion() const {
     return juego.mapa; // O(1)
 }
 
-PosYDir ExtremeExorcism::posicionJugador(Jugador j) const {
+PosYDir ExtremeExorcism::posicionJugador(const Jugador& j) const {
     InfoPJ iPj = juego.infoJugadores.at(j); // O(|j|)
     return iPj.infoActual->local; // O(1)
 }
@@ -501,3 +506,5 @@ Evento ExtremeExorcism::aplicar(Accion a, Evento eventoActual) {
             return Evento(eventoActual.pos, IZQUIERDA, false);
     }
 }
+
+
