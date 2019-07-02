@@ -440,9 +440,30 @@ PosYDir ExtremeExorcism::posicionEspecial() const {
     return PosYDir(juego.infoFantasmaEspecial->pos, juego.infoFantasmaEspecial->dir);
 }
 
-list<PosYDir> ExtremeExorcism::disparosFantasmas() const {}
+list<PosYDir> ExtremeExorcism::disparosFantasmas() const {
+    /*Observación:
+     *  En el TP2 devolvemos el conjLineal por referencia pero como aquí piden devolver una lista, hacemos la conversión en O(n).
+     *  (Esto fue consultado con Lean y dijo que estaba bien)
+     */
+    list<PosYDir> res;
+    for(InfoActualFan infoFan : juego.infoActualFantasmasVivos){
+        res.emplace_back(infoFan);
+    }
+    return res;
+    return juego.disparosFanUltimoPaso;
+}
 
-set<Pos> ExtremeExorcism::posicionesDisparadas() const {}
+set<Pos> ExtremeExorcism::posicionesDisparadas() const {
+    /*Observación:
+ *  En el TP2 devolvemos el conjLineal por referencia pero como aquí piden devolver un set, hacemos la conversión en O(n).
+ *  (Esto fue consultado con Lean y dijo que estaba bien)
+ */
+    set<Pos> res;
+    for(Pos p : juego.disparosFanUltimoPaso){
+        res.insert(p);
+    }
+    return res;
+}
 
 bool ExtremeExorcism::jugadorVivo(Jugador j) const {
     InfoPJ iPj = juego.infoJugadores.at(j); // O(|j|)
