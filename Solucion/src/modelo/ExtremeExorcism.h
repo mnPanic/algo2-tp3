@@ -25,7 +25,7 @@ public:
   // Actualiza con acción del jugador.
   //  - Sin pasar de ronda: O(|pj| + #fv * m + #jv)
   //  - Pasando de ronda:   O(|pj| + m^2 + #f + locJugadores + #j * (|maxPj| + long(maxEvt))
-  void ejecutarAccion(Jugador j, Accion a); //O(|pj| + m*#fv #jv)
+  void ejecutarAccion(const Jugador& j, Accion a); //O(|pj| + m*#fv #jv)
 
   list<pair<Jugador, PosYDir>> posicionJugadores() const; //O(1)
 
@@ -105,6 +105,10 @@ private:
 
 
     //// Funciones auxiliares
+
+    //Devuelve el vector con los eventos correspondientes a las acciones
+    // O(long(l))
+    vector<Evento> eventosFanInicial(const list<Accion>&, PosYDir);
 
     // Devuelve una referencia al PasoDisparo de la posición dada en el mapa de disparos.
     // O(1)

@@ -2,7 +2,9 @@
 
 ExtremeExorcism::ExtremeExorcism(Habitacion h, set<Jugador> jugadores, PosYDir f_init, list<Accion> acciones_fantasma,
         Contexto *ctx) : juego(h), ctx(*ctx) {
-
+    iniciarJugadores(jugadores);
+    vector<Evento> f = eventosFanInicial(acciones_fantasma, f_init);
+    nuevoFanEspecial(f);
 }
 
 ExtremeExorcism::Juego::Juego(Habitacion h) : paso(0), ronda(0), mapa(h), mapaDisparos(vector<vector<PasoDisparo>> (h.tam(),vector<PasoDisparo>(h.tam(), PasoDisparo(0,0))))
@@ -22,7 +24,7 @@ ExtremeExorcism::PasoDisparo::PasoDisparo(int pj, int fan) : pj(pj), fan(fan) {}
 
 void ExtremeExorcism::pasar() {}
 
-void ExtremeExorcism::ejecutarAccion(Jugador j, Accion a) {
+void ExtremeExorcism::ejecutarAccion(const Jugador& j, Accion a) {
     // Incremento el paso
     juego.paso++; // O(1)
 
@@ -61,8 +63,19 @@ void ExtremeExorcism::ejecutarAccion(Jugador j, Accion a) {
 void ExtremeExorcism::iniciarJugadores(const set<Jugador>&) {
 
 }
+
 void ExtremeExorcism::nuevoFanEspecial(const vector<Evento>& eventosFan) {
 
+}
+
+vector<Evento> ExtremeExorcism::eventosFanInicial(const list<Accion>& l, PosYDir pd) {
+    vector<Evento> f;
+    Evento anterior = Evento(pd.pos, pd.dir, false); // OJO, ESTO PODRÍA NO IR Y QUE EL INICIAL SEA APLICAR DE LA PRIMER ACCIÓN
+    f.push_back(anterior);
+    for(auto it = l.begin(); it != l.end(); it++){
+        f.push_back(aplicar(*it, anterior));
+    }
+    return f;
 }
 
 ExtremeExorcism::PasoDisparo& ExtremeExorcism::pasoDisparoEn(Pos pos) {
@@ -506,5 +519,4 @@ Evento ExtremeExorcism::aplicar(Accion a, Evento eventoActual) {
             return Evento(eventoActual.pos, IZQUIERDA, false);
     }
 }
-
 
