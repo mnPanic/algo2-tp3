@@ -89,9 +89,10 @@ private:
 
     Nodo* raiz;
     int _size;
-    int cantHijos(Nodo* a) const;
     set<string> _claves;
 
+
+    int cantHijos(Nodo* a) const;
     void borradoTotal(Nodo* a);
     string_map<T>& referencia(Nodo* a, Nodo* d);
 };
