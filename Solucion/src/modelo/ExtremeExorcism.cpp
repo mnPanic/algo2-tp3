@@ -2,9 +2,9 @@
 
 ExtremeExorcism::ExtremeExorcism(Habitacion h, set<Jugador> jugadores, PosYDir f_init, list<Accion> acciones_fantasma,
         Contexto *ctx) : juego(h), ctx(*ctx) {
-    iniciarJugadores(jugadores);
     vector<Evento> f = eventosFanInicial(acciones_fantasma, f_init);
     nuevoFanEspecial(f);
+    iniciarJugadores(jugadores);
 }
 
 ExtremeExorcism::Juego::Juego(Habitacion h) : paso(0), ronda(0), mapa(h), mapaDisparos(vector<vector<PasoDisparo>> (h.tam(),vector<PasoDisparo>(h.tam(), PasoDisparo(0,0))))
