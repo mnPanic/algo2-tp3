@@ -85,7 +85,7 @@ public:
 
     // Devuelve los fantasmas del juego.
     // O(1)
-    const list<Fantasma> &fantasmas() const;
+    const list<Fantasma> fantasmas() const;
 
 private:
     struct InfoActualPJ {
