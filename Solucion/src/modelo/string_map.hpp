@@ -27,6 +27,7 @@ string_map<T>& string_map<T>::referencia(string_map<T>::Nodo *a, string_map<T>::
 template <typename T>
 string_map<T>& string_map<T>::operator=(const string_map<T>& d) {
     borradoTotal(raiz);
+    _claves.clear();
     delete raiz;
     raiz = new Nodo(d.raiz->definicion);
     referencia(raiz, d.raiz);
