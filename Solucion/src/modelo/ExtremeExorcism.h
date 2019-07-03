@@ -17,6 +17,12 @@ using namespace std;
 
 class ExtremeExorcism {
 public:
+    /***** Funciones obligatorias *****/
+
+    // (Iniciar)
+    // Crea un nuevo juego con el mapa dado, un conjunto de jugadores, y los
+    // eventos de un fantasma.
+    // O(m^2 + #pjs * |maxPJ| + locJugadores + long(acciones_fantasma)^2)
     ExtremeExorcism(Habitacion h, set<Jugador> jugadores, PosYDir f_init,
                     list<Accion> acciones_fantasma, Contexto *ctx);
 
@@ -29,24 +35,56 @@ public:
     //  - Pasando de ronda:   O(|pj| + m^2 + #f + locJugadores + #j * (|maxPj| + long(maxEvt))
     void ejecutarAccion(const Jugador& j, Accion a); //O(|pj| + m*#fv #jv)
 
-    list<pair<Jugador, PosYDir>> posicionJugadores() const; //O(1)
+    // (InfoActualPJVivos)
+    // Devuelve un conjunto con la identidad, posición y dirección actual
+    // de los jugadores vivos.
+    // O(1)
+    list<pair<Jugador, PosYDir>> posicionJugadores() const;
 
-    list<PosYDir> posicionFantasmas() const; //O(1)
+    // (InfoActualPJVivos)
+    // Devuelve un conjunto con la identidad, posición y dirección actual
+    // de los jugadores vivos.
+    // O(1)
+    list<PosYDir> posicionFantasmas() const;
 
-    PosYDir posicionEspecial() const; //O(1)
+    // (InfoActualFanEspecial)
+    // Devuelve la posición y dirección delfantasma especial.
+    // O(1)
+    PosYDir posicionEspecial() const;
 
-    list<PosYDir> disparosFantasmas() const; //O(#fv)
+    // (InfoActualFanVivosQueDisp)
+    // Devuelve un conjunto con la info de los fantasmas que están vivos y
+    // disparan en el último paso ejecutado en el juego.
+    // O(#fv)
+    list<PosYDir> disparosFantasmas() const;
 
-    set<Pos> posicionesDisparadas() const; //O(1)
+    // (Vivo?)
+    // Devuelve si un jugador está vivo.
+    // O(|pj|)
+    bool jugadorVivo(Jugador j) const;
 
-    bool jugadorVivo(Jugador j) const; //O(|pj|)
+    // (PosOcupadasPorDisparosFan)
+    // Devuelve un conjunto de las posiciones afectadas por disparos de
+    // fantasmas en el último paso.
+    // O(1)
+    set<Pos> posicionesDisparadas() const;
 
+    /***** Observadores *****/
+
+    // Devuelve la habitación del juego.
+    // O(1)
     const Habitacion &habitacion() const;
 
+    // Devuelve la posición actual del jugador `j`.
+    // O(|j|)
     PosYDir posicionJugador(const Jugador& j) const;
 
+    // Devuelve los jugadores del juego.
+    // O(1)
     const set<Jugador> &jugadores() const;
 
+    // Devuelve los fantasmas del juego.
+    // O(1)
     const list<Fantasma> &fantasmas() const;
 
 private:
