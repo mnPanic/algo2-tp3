@@ -89,7 +89,10 @@ void ExtremeExorcism::iniciarJugadores(const set<Jugador>& jugadores) {
 
         // Creo la infoActual y la agrego a su conjunto
         InfoActualPJ infoActual = InfoActualPJ{pj, localizacion};                   // O(1)
-        auto itInfoActual = juego.infoActualJugadoresVivos.fast_insert(infoActual); // O(1)
+        auto itInfoActual = juego.infoActualJugadoresVivos.insert(
+                juego.infoActualJugadoresVivos.begin(),
+                infoActual
+        ); // O(1)
 
         // Creo la infoPJ con la actual
         InfoPJ info = nuevaInfoPJ(localizacion, itInfoActual);                      // O(1)
@@ -98,7 +101,10 @@ void ExtremeExorcism::iniciarJugadores(const set<Jugador>& jugadores) {
         *infoPtr = info;
 
         // Agrego al conjunto de jugadores vivos el puntero a la info del PJ
-        juego.infoJugadoresVivos.fast_insert(infoPtr);                              // O(1)
+        juego.infoJugadoresVivos.insert(
+                juego.infoJugadoresVivos.begin(),
+                infoPtr
+        );                              // O(1)
     }
 }
 
@@ -115,7 +121,10 @@ ExtremeExorcism::InfoPJ ExtremeExorcism::nuevaInfoPJ(PosYDir localizacion,
 void ExtremeExorcism::nuevoFanEspecial(const vector<Evento>& eventosFan) {
     // Creo la infoActual y la agrego a su conjunto
     InfoActualFan infoActual = PosYDir(eventosFan[0].pos, eventosFan[0].dir);   // O(1)
-    auto itInfoActualFan = juego.infoActualFantasmasVivos.fast_insert(infoActual);   // O(1)
+    auto itInfoActualFan = juego.infoActualFantasmasVivos.insert(
+            juego.infoActualFantasmasVivos.begin(),
+            infoActual
+    );   // O(1)
 
     // Hago que este sea el fantasma especial
     juego.infoFantasmaEspecial = itInfoActualFan;   // O(1)
@@ -127,10 +136,16 @@ void ExtremeExorcism::nuevoFanEspecial(const vector<Evento>& eventosFan) {
     InfoFan infoFan = InfoFan(nuevosEventosFan, true, itInfoActualFan); // O(1)
 
     // La agrego al conjunto de info de fantasmas, y me guardo el iterador
-    auto itInfoFan = juego.infoFantasmas.fast_insert(infoFan);  // O(1)
+    auto itInfoFan = juego.infoFantasmas.insert(
+            juego.infoFantasmas.begin(),
+            infoFan
+    );  // O(1)
 
     // Agrego al conjunto de fantasmas vivos el iterador
-    juego.infoFantasmasVivos.fast_insert(itInfoFan);    // O(1)
+    juego.infoFantasmasVivos.insert(
+            juego.infoFantasmasVivos.begin(),
+            itInfoFan
+    );    // O(1)
 }
 
 vector<Evento> ExtremeExorcism::eventosFanInicial(const list<Accion>& l, PosYDir pd) {
@@ -209,7 +224,7 @@ void ExtremeExorcism::agregarDisparo(Pos pos, Dir dir, bool esFan) {
 
             // Si es un fantasma, agrego la posición al conjunto de disparos de fantasmas
             if (esFan) {
-                juego.disparosFanUltimoPaso.insert(posC);
+                juego.disparosFanUltimoPaso.push_back(posC);
             }
         }
 
@@ -326,13 +341,19 @@ void ExtremeExorcism::reiniciarFantasmas() {
         // Creo su infoActual y la agrego a infoActualFantasmasVivos,
         // guardandome el iterador
         PosYDir infoActualFan = PosYDir(info.eventos[0].pos, info.eventos[0].dir);
-        auto itInfoActualFan = juego.infoActualFantasmasVivos.fast_insert(infoActualFan); // O(1)
+        auto itInfoActualFan = juego.infoActualFantasmasVivos.insert(  // O(1)
+                juego.infoActualFantasmasVivos.begin(),
+                infoActualFan
+        );
 
         // Le seteo el iterador a la info actual
         info.infoActual = itInfoActualFan;
 
         // Agrego un iterador a su info a infoFantasmasVivos
-        juego.infoFantasmasVivos.fast_insert(itInfoFan);
+        juego.infoFantasmasVivos.insert(
+                juego.infoFantasmasVivos.begin(),
+                itInfoFan
+        );
     }
 }
 
@@ -364,13 +385,19 @@ void ExtremeExorcism::reiniciarJugadores() {
         InfoActualPJ infoActualPJ = InfoActualPJ{pj, localizacion};
 
         // La agrego a infoActualJugadoresVivos y me guardo el iterador
-        auto itInfoActual = juego.infoActualJugadoresVivos.fast_insert(infoActualPJ);
+        auto itInfoActual = juego.infoActualJugadoresVivos.insert(
+                juego.infoActualJugadoresVivos.begin(),
+                infoActualPJ
+        );
 
         // Le seteo la info actual
         infoPJ.infoActual = itInfoActual;
 
         // Agrego un puntero a la infoPJ a infoJugadoresvivos
-        juego.infoJugadoresVivos.fast_insert(&infoPJ);
+        juego.infoJugadoresVivos.insert(
+                juego.infoJugadoresVivos.begin(),
+                &infoPJ
+        );
     }
 }
 
