@@ -20,12 +20,14 @@ public:
   ExtremeExorcism(Habitacion h, set<Jugador> jugadores, PosYDir f_init,
                   list<Accion> acciones_fantasma, Contexto *ctx);
 
-  void pasar(); //O(#fv ∗ m + #jv)
+  // Actualiza sin acción del jugador.
+  // O(#fv * m + #jv)
+  void pasar();
 
   // Actualiza con acción del jugador.
   //  - Sin pasar de ronda: O(|pj| + #fv * m + #jv)
   //  - Pasando de ronda:   O(|pj| + m^2 + #f + locJugadores + #j * (|maxPj| + long(maxEvt))
-  void ejecutarAccion(Jugador j, Accion a); //O(|pj| + m*#fv #jv)
+  void ejecutarAccion(const Jugador& j, Accion a); //O(|pj| + m*#fv #jv)
 
   list<pair<Jugador, PosYDir>> posicionJugadores() const; //O(1)
 
@@ -41,7 +43,7 @@ public:
 
   const Habitacion &habitacion() const;
 
-  PosYDir posicionJugador(Jugador j) const;
+  PosYDir posicionJugador(const Jugador& j) const;
 
   const set<Jugador> &jugadores() const;
 
@@ -106,6 +108,10 @@ private:
 
     //// Funciones auxiliares
 
+    //Devuelve el vector con los eventos correspondientes a las acciones
+    // O(long(l))
+    vector<Evento> eventosFanInicial(const list<Accion>&, PosYDir);
+
     // Devuelve una referencia al PasoDisparo de la posición dada en el mapa de disparos.
     // O(1)
     PasoDisparo& pasoDisparoEn(Pos pos);
@@ -113,7 +119,7 @@ private:
 
     // Actualiza la info del personaje y devuelve una referencia a ella.
     // O(|pj|)
-    InfoPJ& actualizarPJ(Jugador j, Accion a);
+    InfoPJ& actualizarPJ(const Jugador& j, Accion a);
 
     // Devuelve el evento que corresponde al paso actual de un jugador.
     // O(1)
@@ -122,6 +128,14 @@ private:
     // Devuelve el evento que corresponde al paso actual de un fantasma.
     // O(1)
     Evento eventoActualFan(InfoFan info, int paso);
+
+    //Inicializa los jugadores
+    // O(#pjs+|pjMasLargo|)
+    void iniciarJugadores(const set<Jugador>&);
+
+    // Agrega un nuevo fantasma especial.
+    // O(long(eventosFan)^2)
+    void nuevoFanEspecial(const vector<Evento>& eventosFan);
 
     // Reinicia la lista de disparos de fantasmas.
     // O(1)
@@ -157,7 +171,7 @@ private:
     // Cambia la ronda, agregando un fantasma especial y
     // reiniciando todas las estructuras
     // O(m^2 + #f + locJugadores + #j * (|maxPJ| + long(maxEvt))
-    void nuevaRonda(InfoPJ pjMatoFanEspecial);
+    void nuevaRonda(const InfoPJ& pjMatoFanEspecial);
 
     // Reinicia los disparos del mapa de disparos.
     // O(m^2)
@@ -170,10 +184,6 @@ private:
     // Agrega todos los jugadores a las estructuras de vivos
     // O(locJugadores + #j * (|maxPJ| + long(maxEvt))
     void reiniciarJugadores();
-
-    // Agrega un nuevo fantasma especial.
-    // O(long(eventosFan)^2)
-    void nuevoFanEspecial(vector<Evento> eventosFan);
 
     // Genera una lista con un solo elemento,
     // el correspondiente a la localización.
@@ -188,7 +198,7 @@ private:
     // Actualiza la información actual del fantasma,
     // y devuelve su nuevo evento actual.
     // O(1)
-    Evento actualizarFan(InfoFan info, int paso);
+    Evento actualizarFan(InfoFan& info, int paso);
 
     // Mata a todos los pjs que se vean afectados por disparos.
     // O(#jv)
@@ -211,11 +221,12 @@ private:
     // O(n)
     vector<Evento> vectorizar(list<Evento> l);
 
-    // TODO: Mover a acción?
-    Evento aplicar(Accion a, Jugador j, Evento eventoActual);
+    // TODO: Mover a acción? NO, DEJÉMOSLÓ ACÁ PORQUE APLICAR RECIBE UN JUEGO.
+    Evento aplicar(Accion a, Evento eventoActual);
     Pos avanzar(Pos p, Dir d);
 
 
+    list<Evento> vecToList(vector<Evento> vector) const;
 };
 
 #endif
