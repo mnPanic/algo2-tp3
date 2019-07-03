@@ -222,7 +222,13 @@ private:
     vector<Evento> vectorizar(list<Evento> l);
 
     // TODO: Mover a acción? NO, DEJÉMOSLÓ ACÁ PORQUE APLICAR RECIBE UN JUEGO.
+
+    // Genera el evento a partir de la acción a realizar.
+    // O(1)
     Evento aplicar(Accion a, Evento eventoActual);
+
+    // Devuelve la posición resultante a moverse en la dirección indicada.
+    // O(1)
     Pos avanzar(Pos p, Dir d);
 
 
