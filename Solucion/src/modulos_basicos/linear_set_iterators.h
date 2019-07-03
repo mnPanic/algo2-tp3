@@ -1,5 +1,5 @@
 #ifndef linear_set_iterators_h
-#define linear_set_iteratros_h
+#define linear_set_iterators_h
 
 #include "linear_set.h"
 #include <iostream>
