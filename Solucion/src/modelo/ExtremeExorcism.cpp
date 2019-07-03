@@ -546,36 +546,41 @@ Pos ExtremeExorcism::avanzar(Pos p, Dir d) {
 }
 
 Evento ExtremeExorcism::aplicar(Accion a, Evento eventoActual) {
-    Pos prox;
-    switch (a) {
-        case DISPARAR:
-            return Evento(eventoActual.pos, eventoActual.dir, true);
-        case ESPERAR:
-            return Evento(eventoActual.pos, eventoActual.dir, false);
+    if (a == DISPARAR) {
+        return Evento(eventoActual.pos, eventoActual.dir, true);
+    }
+
+    if (a == ESPERAR) {
+        return Evento(eventoActual.pos, eventoActual.dir, false);
+    }
+
+    // Se que es una acción de mover
+    Dir dirDeA = dirDe(a);
+
+    Pos prox = avanzar(eventoActual.pos, dirDeA);
+    if (juego.mapa.valida(prox) && !juego.mapa.ocupado(prox)) {
+        // Si es una posición valida que no está ocupada, entonces me puedo
+        // mover en esa dirección.
+        return Evento(prox, dirDeA, false);
+    }
+    // Sino, solamente cambia la dirección en la que miro, pero mi posición
+    // se mantiene.
+    return Evento(eventoActual.pos, dirDeA, false);
+}
+
+Dir ExtremeExorcism::dirDe(Accion a) {
+    switch(a){
         case MARRIBA:
-            prox = avanzar(eventoActual.pos, ARRIBA);
-            if(juego.mapa.valida(prox) && juego.mapa.ocupado(prox)){
-                return Evento(prox, ARRIBA, false);
-            }
-            return Evento(eventoActual.pos, ARRIBA, false);
+            return ARRIBA;
         case MABAJO:
-            prox = avanzar(eventoActual.pos, ABAJO);
-            if(juego.mapa.valida(prox) && juego.mapa.ocupado(prox)){
-                return Evento(prox, ABAJO, false);
-            }
-            return Evento(eventoActual.pos, ABAJO, false);
-        case MDERECHA:
-            prox = avanzar(eventoActual.pos, DERECHA);
-            if(juego.mapa.valida(prox) && juego.mapa.ocupado(prox)){
-                return Evento(prox, DERECHA, false);
-            }
-            return Evento(eventoActual.pos, DERECHA, false);
+            return ABAJO;
         case MIZQUIERDA:
-            prox = avanzar(eventoActual.pos, IZQUIERDA);
-            if(juego.mapa.valida(prox) && juego.mapa.ocupado(prox)){
-                return Evento(prox, IZQUIERDA, false);
-            }
-            return Evento(eventoActual.pos, IZQUIERDA, false);
+            return IZQUIERDA;
+        case MDERECHA:
+            return DERECHA;
+        default:
+            // No debería pasar
+            return ARRIBA;
     }
 }
 

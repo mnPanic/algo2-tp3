@@ -231,6 +231,9 @@ private:
 
     // TODO: Mover a acción? NO, DEJÉMOSLÓ ACÁ PORQUE APLICAR RECIBE UN JUEGO.
 
+    // Devuelve la direccion de una acción
+    Dir dirDe(Accion a);
+
     // Genera el evento a partir de la acción a realizar.
     // O(1)
     Evento aplicar(Accion a, Evento eventoActual);
