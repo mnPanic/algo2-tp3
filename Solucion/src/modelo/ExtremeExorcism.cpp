@@ -20,9 +20,23 @@ ExtremeExorcism::Juego::Juego(Habitacion h) : paso(0), ronda(0), mapa(h), mapaDi
 {}
 ExtremeExorcism::PasoDisparo::PasoDisparo(int pj, int fan) : pj(pj), fan(fan) {}
 
+void ExtremeExorcism::pasar() {
+    // Incremento el paso
+    juego.paso++; // O(1)
 
+    // Reinicio los disparos de los fantasmas
+    reiniciarDisparosFan();         // O(1)
 
-void ExtremeExorcism::pasar() {}
+    // Actualizo las acciones de los fantasmas, actualizando el mapa de
+    // disparos si es que disparan
+    actualizarFantasmas();          // O(#fv * m)
+
+    // Veo que jugadores mueren
+    chequearMuerteJugadores();      // O(#jv)
+
+    // Agrego los 'pasar' faltantes
+    agregarPasarFaltantes();        // O(#jv)
+}
 
 void ExtremeExorcism::ejecutarAccion(const Jugador& j, Accion a) {
     // Incremento el paso
