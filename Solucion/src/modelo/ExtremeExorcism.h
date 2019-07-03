@@ -56,6 +56,7 @@ private:
     };
 
     struct InfoPJ {
+        InfoPJ(): eventos(), vivo(true), infoActual(linear_set<InfoActualPJ>().begin()){} // Para el trie
         InfoPJ(list<Evento> eventos, bool vivo, algo2::linear_set<InfoActualPJ>::iterator actual):
           eventos(eventos), vivo(vivo), infoActual(actual){}
         list<Evento> eventos;
@@ -102,8 +103,7 @@ private:
         algo2::linear_set<InfoFan> infoFantasmas;
         algo2::linear_set<InfoActualFan> infoActualFantasmasVivos;
         algo2::linear_set<algo2::linear_set<InfoFan>::iterator> infoFantasmasVivos;
-        //algo2::linear_set<InfoActualFan>::iterator infoFantasmaEspecial;
-        InfoActualFan* infoFantasmaEspecial;
+        algo2::linear_set<InfoActualFan>::iterator infoFantasmaEspecial;
     };
 
     Juego juego;

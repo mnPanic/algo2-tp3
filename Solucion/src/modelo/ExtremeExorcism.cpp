@@ -7,7 +7,12 @@ ExtremeExorcism::ExtremeExorcism(Habitacion h, set<Jugador> jugadores, PosYDir f
     iniciarJugadores(jugadores);
 }
 
-ExtremeExorcism::Juego::Juego(Habitacion h) : paso(0), ronda(0), mapa(h), mapaDisparos(vector<vector<PasoDisparo>> (h.tam(),vector<PasoDisparo>(h.tam(), PasoDisparo(0,0))))
+ExtremeExorcism::Juego::Juego(Habitacion h) :
+    paso(0),
+    ronda(0),
+    mapa(h),
+    mapaDisparos(vector<vector<PasoDisparo>> (h.tam(),vector<PasoDisparo>(h.tam(), PasoDisparo(0,0)))),
+    infoFantasmaEspecial(linear_set<InfoActualFan>().begin()) {}
 //                                              disparosFanUltimoPaso(algo2::linear_set<Pos>()),
 //                                              infoJugadores(string_map<InfoPJ>()),
 //                                              infoActualJugadoresVivosq(algo2::linear_set<InfoActualPJ>()),
@@ -16,8 +21,7 @@ ExtremeExorcism::Juego::Juego(Habitacion h) : paso(0), ronda(0), mapa(h), mapaDi
 //                                              infoActualFantasmasVivos(algo2::linear_set<InfoActualFan>()),
 //                                              infoFantasmasVivos(algo2::linear_set<algo2::linear_set<InfoFan>::iterator>()),
 // infoFantasmaEspecial(algo2::linear_set<InfoActualFan>::iterator infoActualFantasmasVivos)
-//                                              infoFantasmaEspecial() {}
-{}
+
 ExtremeExorcism::PasoDisparo::PasoDisparo(int pj, int fan) : pj(pj), fan(fan) {}
 
 void ExtremeExorcism::pasar() {
@@ -113,7 +117,8 @@ void ExtremeExorcism::nuevoFanEspecial(const vector<Evento>& eventosFan) {
     auto itInfoActualFan = juego.infoActualFantasmasVivos.fast_insert(infoActual);   // O(1)
 
     // Hago que este sea el fantasma especial
-    juego.infoFantasmaEspecial = &(*itInfoActualFan);   // O(1) // TODO: Como hacer esto?
+    juego.infoFantasmaEspecial = itInfoActualFan;   // O(1)
+
     // Le doy forma al vector de eventos
     vector<Evento> nuevosEventosFan = inversa(eventosFan);  // O(long(eventosFan)^2)
 
