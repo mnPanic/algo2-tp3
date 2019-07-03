@@ -205,12 +205,9 @@ void ExtremeExorcism::actualizarMapaDisparosConPJ(Evento eventoPJ) {
 }
 
 void ExtremeExorcism::agregarDisparo(Pos pos, Dir dir, bool esFan) {
-    // Me creo una copia de pos
-    Pos posC = pos;
-
-    // Parado desde posC en el mapa de disparos, recorro hacia dir
+    // Parado desde pos en el mapa de disparos, recorro hacia dir
     // hasta que me choco con un obstaculo o con la pared.
-    while(juego.mapa.valida(posC) && !juego.mapa.ocupado(pos)) {    // O(m)
+    while(juego.mapa.valida(pos) && !juego.mapa.ocupado(pos)) {    // O(m)
         // Me guardo una referencia al paso del disparo correcto
         PasoDisparo disp = pasoDisparoEn(pos);
         int& pasoDisparo = esFan? disp.fan : disp.pj;
@@ -223,12 +220,12 @@ void ExtremeExorcism::agregarDisparo(Pos pos, Dir dir, bool esFan) {
 
             // Si es un fantasma, agrego la posición al conjunto de disparos de fantasmas
             if (esFan) {
-                juego.disparosFanUltimoPaso.push_back(posC);
+                juego.disparosFanUltimoPaso.push_back(pos);
             }
         }
 
         // Avanzo la posición en la dirección
-        posC = avanzar(pos, dir);
+        pos = avanzar(pos, dir);
     }
 }
 
