@@ -176,8 +176,7 @@ ExtremeExorcism::InfoPJ& ExtremeExorcism::actualizarPJ(const Jugador& j, Accion 
     /* infoPJ.infoActual->local = PosYDir(eventoPJ.pos, eventoPJ.dir);
      * Lo de arriba no vale porque -> devuelve un puntero const, es más bizarro. El * devuelve una referencia al valor apuntado.
      */
-    InfoActualPJ iap = *infoPJ.infoActual;
-    iap.local = PosYDir(eventoPJ.pos, eventoPJ.dir);
+    (infoPJ.infoActual)->local = PosYDir(eventoPJ.pos, eventoPJ.dir);
 
 
     // Devuelvo la info
