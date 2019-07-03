@@ -243,7 +243,7 @@ private:
     // Actualiza la información actual del fantasma,
     // y devuelve su nuevo evento actual.
     // O(1)
-    Evento actualizarFan(InfoFan& info, int paso);
+    Evento actualizarFan(InfoFan& info);
 
     // Mata a todos los pjs que se vean afectados por disparos.
     // O(#jv)

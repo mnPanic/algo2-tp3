@@ -391,7 +391,7 @@ void ExtremeExorcism::actualizarFantasmas() {
         InfoFan info = *itInfoFan;
 
         // Actualizo su info actual, obteniendola del evento actual
-        Evento eventoActual = actualizarFan(info, juego.paso);
+        Evento eventoActual = actualizarFan(info);
 
         // Si dispara, agrego su disparo a los del paso
         if (eventoActual.dispara) {
@@ -400,15 +400,15 @@ void ExtremeExorcism::actualizarFantasmas() {
     }
 }
 
-Evento ExtremeExorcism::actualizarFan(InfoFan& info, int paso) {
+Evento ExtremeExorcism::actualizarFan(InfoFan& info) {
     // Obtengo el evento actual
-    Evento evtActual = eventoActualFan(info, paso);
+    Evento evtActual = eventoActualFan(info, juego.paso);
 
     // Obtengo el iterador a la info actual
     algo2::linear_set<InfoActualFan>::iterator& itInfoActual = info.infoActual;
 
     // La actualizo con el evento actual
-    InfoActualFan iaf = *itInfoActual;
+    InfoActualFan iaf = *info.infoActual; //ESTO NO SIRVE AL FINAL. ROMPE PORQUE NO SE ESTÁ MODIFICANDO.
     iaf.pos = evtActual.pos;
     iaf.dir = evtActual.dir;
 
