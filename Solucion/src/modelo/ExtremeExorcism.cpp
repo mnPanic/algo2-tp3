@@ -431,13 +431,8 @@ Evento ExtremeExorcism::actualizarFan(InfoFan& info) {
     // Obtengo el evento actual
     Evento evtActual = eventoActualFan(info, juego.paso);
 
-    // Obtengo el iterador a la info actual
-    list<InfoActualFan>::iterator& itInfoActual = info.infoActual;
-
-    // La actualizo con el evento actual
-    InfoActualFan iaf = *info.infoActual; //ESTO NO SIRVE AL FINAL. ROMPE PORQUE NO SE ESTÁ MODIFICANDO.
-    iaf.pos = evtActual.pos;
-    iaf.dir = evtActual.dir;
+    // Actualizo la info actual con el evento actual
+    *(info.infoActual) = PosYDir(evtActual.pos, evtActual.dir);
 
     // Devuelvo el evento actualposicionJugador
     return evtActual;
