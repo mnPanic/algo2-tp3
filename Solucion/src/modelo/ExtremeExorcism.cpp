@@ -2,12 +2,17 @@
 
 ExtremeExorcism::ExtremeExorcism(Habitacion h, set<Jugador> jugadores, PosYDir f_init, list<Accion> acciones_fantasma,
         Contexto *ctx) : juego(h), ctx(*ctx) {
-    iniciarJugadores(jugadores);
     vector<Evento> f = eventosFanInicial(acciones_fantasma, f_init);
     nuevoFanEspecial(f);
+    iniciarJugadores(jugadores);
 }
 
-ExtremeExorcism::Juego::Juego(Habitacion h) : paso(0), ronda(0), mapa(h), mapaDisparos(vector<vector<PasoDisparo>> (h.tam(),vector<PasoDisparo>(h.tam(), PasoDisparo(0,0))))
+ExtremeExorcism::Juego::Juego(Habitacion h) :
+    paso(0),
+    ronda(0),
+    mapa(h),
+    mapaDisparos(vector<vector<PasoDisparo>> (h.tam(),vector<PasoDisparo>(h.tam(), PasoDisparo(0,0)))),
+    infoFantasmaEspecial(linear_set<InfoActualFan>().begin()) {}
 //                                              disparosFanUltimoPaso(algo2::linear_set<Pos>()),
 //                                              infoJugadores(string_map<InfoPJ>()),
 //                                              infoActualJugadoresVivosq(algo2::linear_set<InfoActualPJ>()),
@@ -16,8 +21,7 @@ ExtremeExorcism::Juego::Juego(Habitacion h) : paso(0), ronda(0), mapa(h), mapaDi
 //                                              infoActualFantasmasVivos(algo2::linear_set<InfoActualFan>()),
 //                                              infoFantasmasVivos(algo2::linear_set<algo2::linear_set<InfoFan>::iterator>()),
 // infoFantasmaEspecial(algo2::linear_set<InfoActualFan>::iterator infoActualFantasmasVivos)
-//                                              infoFantasmaEspecial() {}
-{}
+
 ExtremeExorcism::PasoDisparo::PasoDisparo(int pj, int fan) : pj(pj), fan(fan) {}
 
 void ExtremeExorcism::pasar() {
@@ -74,20 +78,66 @@ void ExtremeExorcism::ejecutarAccion(const Jugador& j, Accion a) {
     }
 }
 
-void ExtremeExorcism::iniciarJugadores(const set<Jugador>&) {
+void ExtremeExorcism::iniciarJugadores(const set<Jugador>& jugadores) {
+    // Obtengo las posiciones y direcciones de los jugadores
+    map<Jugador, PosYDir> localPJs = ctx.localizar_jugadores(jugadores, fantasmas(), juego.mapa); // O(locJugadores)
 
+    // Lleno las estructuras de los jugadores
+    for(auto& pair : localPJs) {                                                    // O(#pjs * |maxPJ|)
+        Jugador pj = pair.first;
+        PosYDir localizacion = pair.second;
+
+        // Creo la infoActual y la agrego a su conjunto
+        InfoActualPJ infoActual = InfoActualPJ{pj, localizacion};                   // O(1)
+        auto itInfoActual = juego.infoActualJugadoresVivos.fast_insert(infoActual); // O(1)
+
+        // Creo la infoPJ con la actual
+        InfoPJ info = nuevaInfoPJ(localizacion, itInfoActual);                      // O(1)
+        // La agrego al trie y me guardo un puntero a la info guardada
+        InfoPJ* infoPtr = &juego.infoJugadores[pj];                                 // O(|pj|) // TODO: Cambiar por el nombre real de la función
+
+        // Agrego al conjunto de jugadores vivos el puntero a la info del PJ
+        juego.infoJugadoresVivos.fast_insert(infoPtr);                              // O(1)
+    }
+}
+
+ExtremeExorcism::InfoPJ ExtremeExorcism::nuevaInfoPJ(PosYDir localizacion,
+                                                     linear_set<InfoActualPJ>::iterator itInfoActual) {
+    // La armo
+    return InfoPJ(
+        crearEventosConLocalizacion(localizacion),
+        true,
+        itInfoActual
+    );
 }
 
 void ExtremeExorcism::nuevoFanEspecial(const vector<Evento>& eventosFan) {
+    // Creo la infoActual y la agrego a su conjunto
+    InfoActualFan infoActual = PosYDir(eventosFan[0].pos, eventosFan[0].dir);   // O(1)
+    auto itInfoActualFan = juego.infoActualFantasmasVivos.fast_insert(infoActual);   // O(1)
 
+    // Hago que este sea el fantasma especial
+    juego.infoFantasmaEspecial = itInfoActualFan;   // O(1)
+
+    // Le doy forma al vector de eventos
+    vector<Evento> nuevosEventosFan = inversa(eventosFan);  // O(long(eventosFan)^2)
+
+    // Creo la infoFan con la actual
+    InfoFan infoFan = InfoFan(nuevosEventosFan, true, itInfoActualFan); // O(1)
+
+    // La agrego al conjunto de info de fantasmas, y me guardo el iterador
+    auto itInfoFan = juego.infoFantasmas.fast_insert(infoFan);  // O(1)
+
+    // Agrego al conjunto de fantasmas vivos el iterador
+    juego.infoFantasmasVivos.fast_insert(itInfoFan);    // O(1)
 }
 
 vector<Evento> ExtremeExorcism::eventosFanInicial(const list<Accion>& l, PosYDir pd) {
     vector<Evento> f;
     Evento anterior = Evento(pd.pos, pd.dir, false); // OJO, ESTO PODRÍA NO IR Y QUE EL INICIAL SEA APLICAR DE LA PRIMER ACCIÓN
     f.push_back(anterior);
-    for(auto it = l.begin(); it != l.end(); it++){
-        f.push_back(aplicar(*it, anterior));
+    for(Accion a : l){
+        f.push_back(aplicar(a, anterior));
     }
     return f;
 }
@@ -501,36 +551,81 @@ Pos ExtremeExorcism::avanzar(Pos p, Dir d) {
 }
 
 Evento ExtremeExorcism::aplicar(Accion a, Evento eventoActual) {
-    Pos prox;
-    switch (a) {
-        case DISPARAR:
-            return Evento(eventoActual.pos, eventoActual.dir, true);
-        case ESPERAR:
-            return Evento(eventoActual.pos, eventoActual.dir, false);
+    if (a == DISPARAR) {
+        return Evento(eventoActual.pos, eventoActual.dir, true);
+    }
+
+    if (a == ESPERAR) {
+        return Evento(eventoActual.pos, eventoActual.dir, false);
+    }
+
+    // Se que es una acción de mover
+    Dir dirDeA = dirDe(a);
+
+    Pos prox = avanzar(eventoActual.pos, dirDeA);
+    if (juego.mapa.valida(prox) && !juego.mapa.ocupado(prox)) {
+        // Si es una posición valida que no está ocupada, entonces me puedo
+        // mover en esa dirección.
+        return Evento(prox, dirDeA, false);
+    }
+    // Sino, solamente cambia la dirección en la que miro, pero mi posición
+    // se mantiene.
+    return Evento(eventoActual.pos, dirDeA, false);
+}
+
+Dir ExtremeExorcism::dirDe(Accion a) {
+    switch(a){
         case MARRIBA:
-            prox = avanzar(eventoActual.pos, ARRIBA);
-            if(juego.mapa.valida(prox) && juego.mapa.ocupado(prox)){
-                return Evento(prox, ARRIBA, false);
-            }
-            return Evento(eventoActual.pos, ARRIBA, false);
+            return ARRIBA;
         case MABAJO:
-            prox = avanzar(eventoActual.pos, ABAJO);
-            if(juego.mapa.valida(prox) && juego.mapa.ocupado(prox)){
-                return Evento(prox, ABAJO, false);
-            }
-            return Evento(eventoActual.pos, ABAJO, false);
-        case MDERECHA:
-            prox = avanzar(eventoActual.pos, DERECHA);
-            if(juego.mapa.valida(prox) && juego.mapa.ocupado(prox)){
-                return Evento(prox, DERECHA, false);
-            }
-            return Evento(eventoActual.pos, DERECHA, false);
+            return ABAJO;
         case MIZQUIERDA:
-            prox = avanzar(eventoActual.pos, IZQUIERDA);
-            if(juego.mapa.valida(prox) && juego.mapa.ocupado(prox)){
-                return Evento(prox, IZQUIERDA, false);
-            }
-            return Evento(eventoActual.pos, IZQUIERDA, false);
+            return IZQUIERDA;
+        case MDERECHA:
+            return DERECHA;
+        default:
+            // No debería pasar
+            return ARRIBA;
     }
 }
 
+vector<Evento> ExtremeExorcism::inversa(vector<Evento> eventos) {
+    // Copio el vector de entrada
+    vector<Evento> es = eventos;
+
+    // Me guardo la longitud original
+    int longOriginal = es.size();
+
+    // Creo el evento pasar y lo agrego 5 veces
+    Evento pasar = Evento(eventos.back().pos, eventos.back().dir, false);
+    for(int i = 0; i < 4; i++) {
+        es.push_back(pasar);
+    }
+
+    // Recorro los eventos de la secuencia original de atrás para adelante,
+    // inviertiéndolos y agregándolos al final.
+    for (int i = longOriginal - 1; i > 0; i--) {
+        es.push_back(invertir(es[i]));
+    }
+
+    return es;
+}
+
+Evento ExtremeExorcism::invertir(Evento e) {
+    return Evento(e.pos, invertir(e.dir), e.dispara);
+}
+
+Dir ExtremeExorcism::invertir(Dir d) {
+    switch (d) {
+    case ARRIBA:
+        return ABAJO;
+    case ABAJO:
+        return ARRIBA;
+    case DERECHA:
+        return IZQUIERDA;
+    case IZQUIERDA:
+        return DERECHA;
+    default:
+        return ARRIBA;
+    }
+}

@@ -56,6 +56,9 @@ private:
     };
 
     struct InfoPJ {
+        InfoPJ(): eventos(), vivo(true), infoActual(linear_set<InfoActualPJ>().begin()){} // Para el trie
+        InfoPJ(list<Evento> eventos, bool vivo, algo2::linear_set<InfoActualPJ>::iterator actual):
+          eventos(eventos), vivo(vivo), infoActual(actual){}
         list<Evento> eventos;
         bool vivo;
         algo2::linear_set<InfoActualPJ>::iterator infoActual;
@@ -64,7 +67,8 @@ private:
     typedef PosYDir InfoActualFan;
 
     struct InfoFan {
-        InfoFan(typename algo2::linear_set<InfoActualFan>::iterator it) : infoActual(it) {};
+        InfoFan(vector<Evento> eventos, bool vivo, typename algo2::linear_set<InfoActualFan>::iterator it) :
+          infoActual(it), vivo(vivo), eventos(eventos) {};
         vector<Evento> eventos;
         bool vivo;
         algo2::linear_set<InfoActualFan>::iterator infoActual;
@@ -98,8 +102,7 @@ private:
         algo2::linear_set<InfoFan> infoFantasmas;
         algo2::linear_set<InfoActualFan> infoActualFantasmasVivos;
         algo2::linear_set<algo2::linear_set<InfoFan>::iterator> infoFantasmasVivos;
-        //algo2::linear_set<InfoActualFan>::iterator infoFantasmaEspecial;
-        InfoActualFan* infoFantasmaEspecial;
+        algo2::linear_set<InfoActualFan>::iterator infoFantasmaEspecial;
     };
 
     Juego juego;
@@ -107,6 +110,10 @@ private:
 
 
     //// Funciones auxiliares
+
+    // Genera una nueva información para el personaje.
+    // O(1)
+    InfoPJ nuevaInfoPJ(PosYDir localizacion, linear_set<InfoActualPJ>::iterator itInfoActual);
 
     //Devuelve el vector con los eventos correspondientes a las acciones
     // O(long(l))
@@ -129,8 +136,8 @@ private:
     // O(1)
     Evento eventoActualFan(InfoFan info, int paso);
 
-    //Inicializa los jugadores
-    // O(#pjs+|pjMasLargo|)
+    // Inicializa los jugadores
+    // O(#pjs * |maxPJ| + locJugadores)
     void iniciarJugadores(const set<Jugador>&);
 
     // Agrega un nuevo fantasma especial.
@@ -222,9 +229,30 @@ private:
     vector<Evento> vectorizar(list<Evento> l);
 
     // TODO: Mover a acción? NO, DEJÉMOSLÓ ACÁ PORQUE APLICAR RECIBE UN JUEGO.
+
+    // Devuelve la direccion de una acción
+    Dir dirDe(Accion a);
+
+    // Genera el evento a partir de la acción a realizar.
+    // O(1)
     Evento aplicar(Accion a, Evento eventoActual);
+
+    // Devuelve la posición resultante a moverse en la dirección indicada.
+    // O(1)
     Pos avanzar(Pos p, Dir d);
 
+    // Genera una secuencia que contiene a la inicial, le suma 5 `pasar`
+    // y agrega la secuencia original invertida.
+    // O(long(eventos)^2)
+    vector<Evento> inversa(vector<Evento> eventos);
+
+    // Invierte un evento.
+    // O(1)
+    Evento invertir(Evento e);
+
+    // Invierte una dirección.
+    // O(1)
+    Dir invertir(Dir d);
 
     list<Evento> vecToList(vector<Evento> vector) const;
 };
