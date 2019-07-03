@@ -672,7 +672,7 @@ vector<Evento> ExtremeExorcism::inversa(vector<Evento> eventos) {
 
     // Creo el evento pasar y lo agrego 5 veces
     Evento pasar = Evento(eventos.back().pos, eventos.back().dir, false);
-    for(int i = 0; i < 4; i++) {
+    for(int i = 0; i < 5; i++) {
         es.push_back(pasar);
     }
 
@@ -683,7 +683,7 @@ vector<Evento> ExtremeExorcism::inversa(vector<Evento> eventos) {
     }
 
     pasar = Evento(es.back().pos, es.back().dir, false);
-    for(int i = 0; i < 4; i++) {
+    for(int i = 0; i < 5; i++) {
         es.push_back(pasar);
     }
 
