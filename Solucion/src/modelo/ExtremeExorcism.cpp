@@ -122,7 +122,7 @@ Evento ExtremeExorcism::eventoActualPJ(InfoPJ infoPJ) const {
     return infoPJ.eventos.back();   // O(1)
 }
 
-Evento ExtremeExorcism::eventoActualFan(ExtremeExorcism::InfoFan info, int paso) {
+Evento ExtremeExorcism::eventoActualFan(ExtremeExorcism::InfoFan info, int paso) const {
     return info.eventos[paso % info.eventos.size()];
 }
 
@@ -444,13 +444,16 @@ list<pair<Jugador, PosYDir>> ExtremeExorcism::posicionJugadores() const {
 }
 
 list<PosYDir> ExtremeExorcism::posicionFantasmas() const {
-    list<PosYDir> res;
-    for(const auto & infoFantasma : juego.infoFantasmas){
-        if(infoFantasma.eventos[juego.paso].dispara == true){
-            res.emplace_back(make_pair(infoFantasma.infoActual->pos, infoFantasma.infoActual->dir));
-        }
+    // Observación: Es necesario realizar la conversión a list, pero se podría
+    //              devolver en O(1).
+
+    list<PosYDir> ps;
+
+    for(PosYDir p : juego.infoActualFantasmasVivos) { // O(n)
+        ps.push_back(p);
     }
-    return res;
+
+    return ps;
 }
 
 PosYDir ExtremeExorcism::posicionEspecial() const {
@@ -458,6 +461,16 @@ PosYDir ExtremeExorcism::posicionEspecial() const {
 }
 
 list<PosYDir> ExtremeExorcism::disparosFantasmas() const {
+    list<PosYDir> ps;
+    for (auto itInfoFan : juego.infoFantasmasVivos) { // O(#fv)
+        InfoFan infoFan = *itInfoFan;
+        Evento e = eventoActualFan(infoFan, juego.paso);
+        if (e.dispara) {
+            ps.push_back(PosYDir(e.pos, e.dir));
+        }
+    }
+
+    return ps;
 }
 
 set<Pos> ExtremeExorcism::posicionesDisparadas() const {

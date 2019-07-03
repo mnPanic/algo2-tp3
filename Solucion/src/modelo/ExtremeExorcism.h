@@ -165,7 +165,7 @@ private:
 
     // Devuelve el evento que corresponde al paso actual de un fantasma.
     // O(1)
-    Evento eventoActualFan(InfoFan info, int paso);
+    Evento eventoActualFan(InfoFan info, int paso) const;
 
     //Inicializa los jugadores
     // O(#pjs+|pjMasLargo|)
