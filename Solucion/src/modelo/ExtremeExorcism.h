@@ -17,37 +17,37 @@ using namespace std;
 
 class ExtremeExorcism {
 public:
-  ExtremeExorcism(Habitacion h, set<Jugador> jugadores, PosYDir f_init,
-                  list<Accion> acciones_fantasma, Contexto *ctx);
+    ExtremeExorcism(Habitacion h, set<Jugador> jugadores, PosYDir f_init,
+                    list<Accion> acciones_fantasma, Contexto *ctx);
 
-  // Actualiza sin acción del jugador.
-  // O(#fv * m + #jv)
-  void pasar();
+    // Actualiza sin acción del jugador.
+    // O(#fv * m + #jv)
+    void pasar();
 
-  // Actualiza con acción del jugador.
-  //  - Sin pasar de ronda: O(|pj| + #fv * m + #jv)
-  //  - Pasando de ronda:   O(|pj| + m^2 + #f + locJugadores + #j * (|maxPj| + long(maxEvt))
-  void ejecutarAccion(const Jugador& j, Accion a); //O(|pj| + m*#fv #jv)
+    // Actualiza con acción del jugador.
+    //  - Sin pasar de ronda: O(|pj| + #fv * m + #jv)
+    //  - Pasando de ronda:   O(|pj| + m^2 + #f + locJugadores + #j * (|maxPj| + long(maxEvt))
+    void ejecutarAccion(const Jugador& j, Accion a); //O(|pj| + m*#fv #jv)
 
-  list<pair<Jugador, PosYDir>> posicionJugadores() const; //O(1)
+    list<pair<Jugador, PosYDir>> posicionJugadores() const; //O(1)
 
-  list<PosYDir> posicionFantasmas() const; //O(1)
+    list<PosYDir> posicionFantasmas() const; //O(1)
 
-  PosYDir posicionEspecial() const; //O(1)
+    PosYDir posicionEspecial() const; //O(1)
 
-  list<PosYDir> disparosFantasmas() const; //O(#fv)
+    list<PosYDir> disparosFantasmas() const; //O(#fv)
 
-  set<Pos> posicionesDisparadas() const; //O(1)
+    set<Pos> posicionesDisparadas() const; //O(1)
 
-  bool jugadorVivo(Jugador j) const; //O(|pj|)
+    bool jugadorVivo(Jugador j) const; //O(|pj|)
 
-  const Habitacion &habitacion() const;
+    const Habitacion &habitacion() const;
 
-  PosYDir posicionJugador(const Jugador& j) const;
+    PosYDir posicionJugador(const Jugador& j) const;
 
-  const set<Jugador> &jugadores() const;
+    const set<Jugador> &jugadores() const;
 
-  const list<Fantasma> &fantasmas() const;
+    const list<Fantasma> &fantasmas() const;
 
 private:
     struct InfoActualPJ {
