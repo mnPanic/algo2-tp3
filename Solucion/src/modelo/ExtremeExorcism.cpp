@@ -154,6 +154,7 @@ vector<Evento> ExtremeExorcism::eventosFanInicial(const list<Accion>& l, PosYDir
     f.push_back(anterior);
     for(Accion a : l){
         f.push_back(aplicar(a, anterior));
+        anterior = f[f.size() - 1];
     }
     return f;
 }
