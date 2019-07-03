@@ -95,6 +95,7 @@ void ExtremeExorcism::iniciarJugadores(const set<Jugador>& jugadores) {
         InfoPJ info = nuevaInfoPJ(localizacion, itInfoActual);                      // O(1)
         // La agrego al trie y me guardo un puntero a la info guardada
         InfoPJ* infoPtr = &juego.infoJugadores[pj];                                 // O(|pj|) // TODO: Cambiar por el nombre real de la función
+        *infoPtr = info;
 
         // Agrego al conjunto de jugadores vivos el puntero a la info del PJ
         juego.infoJugadoresVivos.fast_insert(infoPtr);                              // O(1)
@@ -390,7 +391,7 @@ void ExtremeExorcism::actualizarFantasmas() {
         InfoFan info = *itInfoFan;
 
         // Actualizo su info actual, obteniendola del evento actual
-        Evento eventoActual = actualizarFan(info, juego.paso);
+        Evento eventoActual = actualizarFan(info);
 
         // Si dispara, agrego su disparo a los del paso
         if (eventoActual.dispara) {
@@ -399,19 +400,19 @@ void ExtremeExorcism::actualizarFantasmas() {
     }
 }
 
-Evento ExtremeExorcism::actualizarFan(InfoFan& info, int paso) {
+Evento ExtremeExorcism::actualizarFan(InfoFan& info) {
     // Obtengo el evento actual
-    Evento evtActual = eventoActualFan(info, paso);
+    Evento evtActual = eventoActualFan(info, juego.paso);
 
     // Obtengo el iterador a la info actual
     algo2::linear_set<InfoActualFan>::iterator& itInfoActual = info.infoActual;
 
     // La actualizo con el evento actual
-    InfoActualFan iaf = *itInfoActual;
+    InfoActualFan iaf = *info.infoActual; //ESTO NO SIRVE AL FINAL. ROMPE PORQUE NO SE ESTÁ MODIFICANDO.
     iaf.pos = evtActual.pos;
     iaf.dir = evtActual.dir;
 
-    // Devuelvo el evento actual
+    // Devuelvo el evento actualposicionJugador
     return evtActual;
 }
 
@@ -553,13 +554,14 @@ const set<Jugador>& ExtremeExorcism::jugadores() const {
     return juego.infoJugadores.claves();
 }
 
-const list<Fantasma>& ExtremeExorcism::fantasmas() const {
+const list<Fantasma> ExtremeExorcism::fantasmas() const {
     list<Fantasma> l; // O(1)
     auto it = l.begin(); // O(1)
     for (InfoFan f : juego.infoFantasmas){ // O(fs*|maxEv|)
         l.insert(it, vecToList(f.eventos)); // O(|Ev|)
         it++; // O(1)
     }
+    return l;
 }
 
 list<Evento> ExtremeExorcism::vecToList(vector<Evento> vector) const {
@@ -654,8 +656,13 @@ vector<Evento> ExtremeExorcism::inversa(vector<Evento> eventos) {
 
     // Recorro los eventos de la secuencia original de atrás para adelante,
     // inviertiéndolos y agregándolos al final.
-    for (int i = longOriginal - 1; i > 0; i--) {
+    for (int i = longOriginal - 1; i >= 0; i--) {
         es.push_back(invertir(es[i]));
+    }
+
+    pasar = Evento(es.back().pos, es.back().dir, false);
+    for(int i = 0; i < 4; i++) {
+        es.push_back(pasar);
     }
 
     return es;
