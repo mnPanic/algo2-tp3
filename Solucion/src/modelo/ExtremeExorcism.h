@@ -17,37 +17,75 @@ using namespace std;
 
 class ExtremeExorcism {
 public:
-  ExtremeExorcism(Habitacion h, set<Jugador> jugadores, PosYDir f_init,
-                  list<Accion> acciones_fantasma, Contexto *ctx);
+    /***** Funciones obligatorias *****/
 
-  // Actualiza sin acción del jugador.
-  // O(#fv * m + #jv)
-  void pasar();
+    // (Iniciar)
+    // Crea un nuevo juego con el mapa dado, un conjunto de jugadores, y los
+    // eventos de un fantasma.
+    // O(m^2 + #pjs * |maxPJ| + locJugadores + long(acciones_fantasma)^2)
+    ExtremeExorcism(Habitacion h, set<Jugador> jugadores, PosYDir f_init,
+                    list<Accion> acciones_fantasma, Contexto *ctx);
 
-  // Actualiza con acción del jugador.
-  //  - Sin pasar de ronda: O(|pj| + #fv * m + #jv)
-  //  - Pasando de ronda:   O(|pj| + m^2 + #f + locJugadores + #j * (|maxPj| + long(maxEvt))
-  void ejecutarAccion(const Jugador& j, Accion a); //O(|pj| + m*#fv #jv)
+    // Actualiza sin acción del jugador.
+    // O(#fv * m + #jv)
+    void pasar();
 
-  list<pair<Jugador, PosYDir>> posicionJugadores() const; //O(1)
+    // Actualiza con acción del jugador.
+    //  - Sin pasar de ronda: O(|pj| + #fv * m + #jv)
+    //  - Pasando de ronda:   O(|pj| + m^2 + #f + locJugadores + #j * (|maxPj| + long(maxEvt))
+    void ejecutarAccion(const Jugador& j, Accion a); //O(|pj| + m*#fv #jv)
 
-  list<PosYDir> posicionFantasmas() const; //O(1)
+    // (InfoActualPJVivos)
+    // Devuelve un conjunto con la identidad, posición y dirección actual
+    // de los jugadores vivos.
+    // O(1)
+    list<pair<Jugador, PosYDir>> posicionJugadores() const;
 
-  PosYDir posicionEspecial() const; //O(1)
+    // (InfoActualPJVivos)
+    // Devuelve un conjunto con la identidad, posición y dirección actual
+    // de los jugadores vivos.
+    // O(1)
+    list<PosYDir> posicionFantasmas() const;
 
-  list<PosYDir> disparosFantasmas() const; //O(#fv)
+    // (InfoActualFanEspecial)
+    // Devuelve la posición y dirección delfantasma especial.
+    // O(1)
+    PosYDir posicionEspecial() const;
 
-  set<Pos> posicionesDisparadas() const; //O(1)
+    // (InfoActualFanVivosQueDisp)
+    // Devuelve un conjunto con la info de los fantasmas que están vivos y
+    // disparan en el último paso ejecutado en el juego.
+    // O(#fv)
+    list<PosYDir> disparosFantasmas() const;
 
-  bool jugadorVivo(Jugador j) const; //O(|pj|)
+    // (Vivo?)
+    // Devuelve si un jugador está vivo.
+    // O(|pj|)
+    bool jugadorVivo(Jugador j) const;
 
-  const Habitacion &habitacion() const;
+    // (PosOcupadasPorDisparosFan)
+    // Devuelve un conjunto de las posiciones afectadas por disparos de
+    // fantasmas en el último paso.
+    // O(1)
+    set<Pos> posicionesDisparadas() const;
 
-  PosYDir posicionJugador(const Jugador& j) const;
+    /***** Observadores *****/
 
-  const set<Jugador> &jugadores() const;
+    // Devuelve la habitación del juego.
+    // O(1)
+    const Habitacion &habitacion() const;
 
-  const list<Fantasma> &fantasmas() const;
+    // Devuelve la posición actual del jugador `j`.
+    // O(|j|)
+    PosYDir posicionJugador(const Jugador& j) const;
+
+    // Devuelve los jugadores del juego.
+    // O(1)
+    const set<Jugador> &jugadores() const;
+
+    // Devuelve los fantasmas del juego.
+    // O(1)
+    const list<Fantasma> &fantasmas() const;
 
 private:
     struct InfoActualPJ {
@@ -134,7 +172,7 @@ private:
 
     // Devuelve el evento que corresponde al paso actual de un fantasma.
     // O(1)
-    Evento eventoActualFan(InfoFan info, int paso);
+    Evento eventoActualFan(InfoFan info, int paso) const;
 
     // Inicializa los jugadores
     // O(#pjs * |maxPJ| + locJugadores)

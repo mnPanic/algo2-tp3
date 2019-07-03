@@ -172,7 +172,7 @@ Evento ExtremeExorcism::eventoActualPJ(InfoPJ infoPJ) const {
     return infoPJ.eventos.back();   // O(1)
 }
 
-Evento ExtremeExorcism::eventoActualFan(ExtremeExorcism::InfoFan info, int paso) {
+Evento ExtremeExorcism::eventoActualFan(ExtremeExorcism::InfoFan info, int paso) const {
     return info.eventos[paso % info.eventos.size()];
 }
 
@@ -475,15 +475,65 @@ void ExtremeExorcism::agregarPasarFaltantes() {
         }
     }
 }
-list<pair<Jugador, PosYDir>> ExtremeExorcism::posicionJugadores() const {}
 
-list<PosYDir> ExtremeExorcism::posicionFantasmas() const {}
 
-PosYDir ExtremeExorcism::posicionEspecial() const {}
 
-list<PosYDir> ExtremeExorcism::disparosFantasmas() const {}
 
-set<Pos> ExtremeExorcism::posicionesDisparadas() const {}
+
+
+list<pair<Jugador, PosYDir>> ExtremeExorcism::posicionJugadores() const {
+    /*Observación:
+     * En el TP2 devolvemos el conjLineal por referencia pero como aquí piden devolver una lista, hacemos la conversión en O(n).
+     * (Esto fue consultado con Lean y dijo que estaba bien)
+     */
+    list<pair<Jugador, PosYDir>> res;
+    for(const InfoActualPJ& infoPJ : juego.infoActualJugadoresVivos){
+        res.emplace_back(make_pair(infoPJ.id, infoPJ.local));
+    }
+    return res;
+}
+
+list<PosYDir> ExtremeExorcism::posicionFantasmas() const {
+    // Observación: Es necesario realizar la conversión a list, pero se podría
+    //              devolver en O(1).
+
+    list<PosYDir> ps;
+
+    for(PosYDir p : juego.infoActualFantasmasVivos) { // O(n)
+        ps.push_back(p);
+    }
+
+    return ps;
+}
+
+PosYDir ExtremeExorcism::posicionEspecial() const {
+    return *juego.infoFantasmaEspecial;
+}
+
+list<PosYDir> ExtremeExorcism::disparosFantasmas() const {
+    list<PosYDir> ps;
+    for (auto itInfoFan : juego.infoFantasmasVivos) { // O(#fv)
+        InfoFan infoFan = *itInfoFan;
+        Evento e = eventoActualFan(infoFan, juego.paso);
+        if (e.dispara) {
+            ps.push_back(PosYDir(e.pos, e.dir));
+        }
+    }
+
+    return ps;
+}
+
+set<Pos> ExtremeExorcism::posicionesDisparadas() const {
+    /*Observación:
+ *  En el TP2 devolvemos el conjLineal por referencia pero como aquí piden devolver un set, hacemos la conversión en O(n).
+ *  (Esto fue consultado con Lean y dijo que estaba bien)
+ */
+    set<Pos> res;
+    for(Pos p : juego.disparosFanUltimoPaso){
+        res.insert(p);
+    }
+    return res;
+}
 
 bool ExtremeExorcism::jugadorVivo(Jugador j) const {
     InfoPJ iPj = juego.infoJugadores.at(j); // O(|j|)
