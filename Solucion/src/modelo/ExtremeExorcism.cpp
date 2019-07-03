@@ -450,7 +450,7 @@ PosYDir ExtremeExorcism::posicionJugador(const Jugador& j) const {
 }
 
 const set<Jugador>& ExtremeExorcism::jugadores() const {
-    // TODO: Función Claves() en stringMap.
+    return juego.infoJugadores.claves();
 }
 
 const list<Fantasma>& ExtremeExorcism::fantasmas() const {

@@ -27,6 +27,7 @@ string_map<T>& string_map<T>::referencia(string_map<T>::Nodo *a, string_map<T>::
 template <typename T>
 string_map<T>& string_map<T>::operator=(const string_map<T>& d) {
     borradoTotal(raiz);
+    _claves.clear();
     delete raiz;
     raiz = new Nodo(d.raiz->definicion);
     referencia(raiz, d.raiz);
@@ -54,27 +55,28 @@ string_map<T>::~string_map(){
     borradoTotal(raiz);
     delete raiz;
     raiz = NULL;
+    _claves.clear();
 }
+
 
 template <typename T>
 T& string_map<T>::operator[](const string& clave){
-    if(count(clave) == 0) {
-        if(raiz == NULL) {
-            raiz = new Nodo();
-        }
-        Nodo* actual = raiz;
-        for(char c : clave) {
-            if(actual->siguientes[int(c)] == NULL) {
-                actual->siguientes[int(c)] = new Nodo();
-            }
+    Nodo* actual = raiz;
+    for(char c : clave){
+        if (actual->siguientes[int(c)] != nullptr){
+            actual = actual->siguientes[int(c)];
+        }else{
+            Nodo* nuevo = new Nodo();
+            actual->siguientes[int(c)] = nuevo;
             actual = actual->siguientes[int(c)];
         }
+    }
+    if(actual->definicion == NULL){
         actual->definicion = new T();
         _size++;
-        return *(actual->definicion);
-    } else {
-        return at(clave);
+        _claves.insert(clave);
     }
+    return *actual->definicion;
 }
 
 
@@ -88,7 +90,6 @@ int string_map<T>::count(const string& clave) const{
             actual = actual->siguientes[int(c)];
         }
     }
-
     return actual->definicion != NULL;
 }
 
@@ -107,7 +108,7 @@ T& string_map<T>::at(const string& clave) {
     for(char c : clave) {
         actual = actual->siguientes[int(c)];
     }
-    return  *(actual->definicion);
+    return *(actual->definicion);
 }
 
 template <typename T>
@@ -125,6 +126,7 @@ template <typename T>
 void string_map<T>::erase(const string& clave) {
     Nodo* borrarDesde = NULL;
     Nodo* actual = raiz;
+    _claves.erase(clave);
     for(char c : clave) {
         if(cantHijos(actual) > 1 || actual->definicion != NULL) {
             borrarDesde = actual->siguientes[int(c)];
@@ -147,4 +149,9 @@ int string_map<T>::size() const{
 template <typename T>
 bool string_map<T>::empty() const{
     return raiz == NULL || (cantHijos(raiz) == 0 && raiz->definicion == NULL);
+}
+
+template<typename T>
+const set<string>& string_map<T>::claves() const {
+    return _claves;
 }

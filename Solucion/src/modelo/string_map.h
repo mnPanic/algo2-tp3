@@ -73,6 +73,11 @@ public:
      * devuelve true si no hay ningún elemento en el diccionario */
     bool empty() const;
 
+    /**
+     CLAVES
+     * devuelve las claves del diccionario */
+    const set<string>& claves() const;
+
 private:
 
     struct Nodo {
@@ -84,11 +89,11 @@ private:
 
     Nodo* raiz;
     int _size;
+    set<string> _claves;
 
-    void borradoTotal(Nodo* a);
 
     int cantHijos(Nodo* a) const;
-
+    void borradoTotal(Nodo* a);
     string_map<T>& referencia(Nodo* a, Nodo* d);
 };
 
