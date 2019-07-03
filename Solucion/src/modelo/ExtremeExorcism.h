@@ -11,7 +11,7 @@
 #include <string>
 #include <utility>
 #include <vector>
-#include <modulos_basicos/linear_set.h>
+#include <modulos_basicos/list.h>
 
 using namespace std;
 
@@ -94,22 +94,22 @@ private:
     };
 
     struct InfoPJ {
-        InfoPJ(): eventos(), vivo(true), infoActual(linear_set<InfoActualPJ>().begin()){} // Para el trie
-        InfoPJ(list<Evento> eventos, bool vivo, algo2::linear_set<InfoActualPJ>::iterator actual):
+        InfoPJ(): eventos(), vivo(true), infoActual(list<InfoActualPJ>().begin()){} // Para el trie
+        InfoPJ(list<Evento> eventos, bool vivo, list<InfoActualPJ>::iterator actual):
           eventos(eventos), vivo(vivo), infoActual(actual){}
         list<Evento> eventos;
         bool vivo;
-        algo2::linear_set<InfoActualPJ>::iterator infoActual;
+        list<InfoActualPJ>::iterator infoActual;
     };
 
     typedef PosYDir InfoActualFan;
 
     struct InfoFan {
-        InfoFan(vector<Evento> eventos, bool vivo, typename algo2::linear_set<InfoActualFan>::iterator it) :
+        InfoFan(vector<Evento> eventos, bool vivo, typename list<InfoActualFan>::iterator it) :
           infoActual(it), vivo(vivo), eventos(eventos) {};
         vector<Evento> eventos;
         bool vivo;
-        algo2::linear_set<InfoActualFan>::iterator infoActual;
+        list<InfoActualFan>::iterator infoActual;
     };
 
     struct PasoDisparo {
@@ -129,18 +129,18 @@ private:
 
         //Disparos
         vector<vector<PasoDisparo>> mapaDisparos;
-        algo2::linear_set<Pos> disparosFanUltimoPaso;
+        list<Pos> disparosFanUltimoPaso;
 
         //Jugadores
         string_map<InfoPJ> infoJugadores;
-        algo2::linear_set<InfoActualPJ> infoActualJugadoresVivos;
-        algo2::linear_set<InfoPJ*> infoJugadoresVivos;
+        list<InfoActualPJ> infoActualJugadoresVivos;
+        list<InfoPJ*> infoJugadoresVivos;
 
         //Fantasmas
-        algo2::linear_set<InfoFan> infoFantasmas;
-        algo2::linear_set<InfoActualFan> infoActualFantasmasVivos;
-        algo2::linear_set<algo2::linear_set<InfoFan>::iterator> infoFantasmasVivos;
-        algo2::linear_set<InfoActualFan>::iterator infoFantasmaEspecial;
+        list<InfoFan> infoFantasmas;
+        list<InfoActualFan> infoActualFantasmasVivos;
+        list<list<InfoFan>::iterator> infoFantasmasVivos;
+        list<InfoActualFan>::iterator infoFantasmaEspecial;
     };
 
     Juego juego;
@@ -151,7 +151,7 @@ private:
 
     // Genera una nueva información para el personaje.
     // O(1)
-    InfoPJ nuevaInfoPJ(PosYDir localizacion, linear_set<InfoActualPJ>::iterator itInfoActual);
+    InfoPJ nuevaInfoPJ(PosYDir localizacion, list<InfoActualPJ>::iterator itInfoActual);
 
     //Devuelve el vector con los eventos correspondientes a las acciones
     // O(long(l))
@@ -211,7 +211,7 @@ private:
     // Saca el fantasma de las estructuras que solo contienen fantasmas vivos.
     // Devuelve si el fantasma que murió era el especial.
     // O(1)
-    bool muereFan(linear_set<linear_set<InfoFan>::iterator>::iterator itFanVivos);
+    bool muereFan(list<list<InfoFan>::iterator>::iterator itFanVivos);
 
     // Cambia la ronda, agregando un fantasma especial y
     // reiniciando todas las estructuras
@@ -255,7 +255,7 @@ private:
 
     // Mata a un personaje, eliminandolo de las estructuras de vivos.
     // O(1)
-    void muerePJ(linear_set<InfoPJ*>::iterator itPJVivos);
+    void muerePJ(list<InfoPJ*>::iterator itPJVivos);
 
     // Agrega 'pasar' como accion a los jugadores que no hayan realizado
     // una acción en este paso.
