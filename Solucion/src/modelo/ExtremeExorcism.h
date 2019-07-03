@@ -67,7 +67,6 @@ private:
     typedef PosYDir InfoActualFan;
 
     struct InfoFan {
-        InfoFan(typename algo2::linear_set<InfoActualFan>::iterator it) : infoActual(it) {};
         InfoFan(vector<Evento> eventos, bool vivo, typename algo2::linear_set<InfoActualFan>::iterator it) :
           infoActual(it), vivo(vivo), eventos(eventos) {};
         vector<Evento> eventos;
