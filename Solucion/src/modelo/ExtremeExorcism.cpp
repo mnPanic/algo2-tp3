@@ -605,16 +605,16 @@ Pos ExtremeExorcism::avanzar(Pos p, Dir d) {
     switch (d)
     {
         case ARRIBA:
-            pos = Pos(p.first + 1, p.second);
+            pos = Pos(p.first, p.second + 1);
             break;
         case ABAJO:
-            pos = Pos(p.first - 1, p.second);
-            break;
-        case IZQUIERDA:
             pos = Pos(p.first, p.second - 1);
             break;
+        case IZQUIERDA:
+            pos = Pos(p.first - 1, p.second);
+            break;
         case DERECHA:
-            pos = Pos(p.first, p.second + 1);
+            pos = Pos(p.first + 1, p.second);
             break;
     }
     return pos;
