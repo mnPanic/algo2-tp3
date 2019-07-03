@@ -74,12 +74,57 @@ void ExtremeExorcism::ejecutarAccion(const Jugador& j, Accion a) {
     }
 }
 
-void ExtremeExorcism::iniciarJugadores(const set<Jugador>&) {
+void ExtremeExorcism::iniciarJugadores(const set<Jugador>& jugadores) {
+    // Obtengo las posiciones y direcciones de los jugadores
+    map<Jugador, PosYDir> localPJs = ctx.localizar_jugadores(jugadores, fantasmas(), juego.mapa); // O(locJugadores)
 
+    // Lleno las estructuras de los jugadores
+    for(auto& pair : localPJs) {                                                    // O(#pjs * |maxPJ|)
+        Jugador pj = pair.first;
+        PosYDir localizacion = pair.second;
+
+        // Creo la infoActual y la agrego a su conjunto
+        InfoActualPJ infoActual = InfoActualPJ{pj, localizacion};                   // O(1)
+        auto itInfoActual = juego.infoActualJugadoresVivos.fast_insert(infoActual); // O(1)
+
+        // Creo la infoPJ con la actual
+        InfoPJ info = nuevaInfoPJ(localizacion, itInfoActual);                      // O(1)
+        // La agrego al trie y me guardo un puntero a la info guardada
+        InfoPJ* infoPtr = &juego.infoJugadores[pj];                                 // O(|pj|) // TODO: Cambiar por el nombre real de la función
+
+        // Agrego al conjunto de jugadores vivos el puntero a la info del PJ
+        juego.infoJugadoresVivos.fast_insert(infoPtr);                              // O(1)
+    }
+}
+
+ExtremeExorcism::InfoPJ ExtremeExorcism::nuevaInfoPJ(PosYDir localizacion,
+                                                     linear_set<InfoActualPJ>::iterator itInfoActual) {
+    // La armo
+    return InfoPJ(
+        crearEventosConLocalizacion(localizacion),
+        true,
+        itInfoActual
+    );
 }
 
 void ExtremeExorcism::nuevoFanEspecial(const vector<Evento>& eventosFan) {
+    // Creo la infoActual y la agrego a su conjunto
+    InfoActualFan infoActual = PosYDir(eventosFan[0].pos, eventosFan[0].dir);   // O(1)
+    auto itInfoActualFan = juego.infoActualFantasmasVivos.fast_insert(infoActual);   // O(1)
 
+    // Hago que este sea el fantasma especial
+    juego.infoFantasmaEspecial = &(*itInfoActualFan);   // O(1) // TODO: Como hacer esto?
+    // Le doy forma al vector de eventos
+    vector<Evento> nuevosEventosFan = inversa(eventosFan);  // O(long(eventosFan)^2)
+
+    // Creo la infoFan con la actual
+    InfoFan infoFan = InfoFan(nuevosEventosFan, true, itInfoActualFan); // O(1)
+
+    // La agrego al conjunto de info de fantasmas, y me guardo el iterador
+    auto itInfoFan = juego.infoFantasmas.fast_insert(infoFan);  // O(1)
+
+    // Agrego al conjunto de fantasmas vivos el iterador
+    juego.infoFantasmasVivos.fast_insert(itInfoFan);    // O(1)
 }
 
 vector<Evento> ExtremeExorcism::eventosFanInicial(const list<Accion>& l, PosYDir pd) {

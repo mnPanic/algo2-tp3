@@ -56,6 +56,8 @@ private:
     };
 
     struct InfoPJ {
+        InfoPJ(list<Evento> eventos, bool vivo, algo2::linear_set<InfoActualPJ>::iterator actual):
+          eventos(eventos), vivo(vivo), infoActual(actual){}
         list<Evento> eventos;
         bool vivo;
         algo2::linear_set<InfoActualPJ>::iterator infoActual;
@@ -65,6 +67,8 @@ private:
 
     struct InfoFan {
         InfoFan(typename algo2::linear_set<InfoActualFan>::iterator it) : infoActual(it) {};
+        InfoFan(vector<Evento> eventos, bool vivo, typename algo2::linear_set<InfoActualFan>::iterator it) :
+          infoActual(it), vivo(vivo), eventos(eventos) {};
         vector<Evento> eventos;
         bool vivo;
         algo2::linear_set<InfoActualFan>::iterator infoActual;
@@ -108,6 +112,10 @@ private:
 
     //// Funciones auxiliares
 
+    // Genera una nueva información para el personaje.
+    // O(1)
+    InfoPJ nuevaInfoPJ(PosYDir localizacion, linear_set<InfoActualPJ>::iterator itInfoActual);
+
     //Devuelve el vector con los eventos correspondientes a las acciones
     // O(long(l))
     vector<Evento> eventosFanInicial(const list<Accion>&, PosYDir);
@@ -129,8 +137,8 @@ private:
     // O(1)
     Evento eventoActualFan(InfoFan info, int paso);
 
-    //Inicializa los jugadores
-    // O(#pjs+|pjMasLargo|)
+    // Inicializa los jugadores
+    // O(#pjs * |maxPJ| + locJugadores)
     void iniciarJugadores(const set<Jugador>&);
 
     // Agrega un nuevo fantasma especial.
