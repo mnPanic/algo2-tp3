@@ -313,8 +313,8 @@ void ExtremeExorcism::nuevaRonda(const ExtremeExorcism::InfoPJ& pjMatoFanEspecia
 
 void ExtremeExorcism::reiniciarMapaDisparos() {
     // Recorro todas las posiciones y las reinicio
-    for (vector<PasoDisparo> row : juego.mapaDisparos) {
-        for (PasoDisparo pos : row) {
+    for (vector<PasoDisparo>& row : juego.mapaDisparos) {
+        for (PasoDisparo& pos : row) {
             pos.pj = 0;
             pos.fan = 0;
         }
