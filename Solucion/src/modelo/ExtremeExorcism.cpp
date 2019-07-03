@@ -593,8 +593,8 @@ list<Evento> ExtremeExorcism::vecToList(vector<Evento> vector) const {
 
 vector<Evento> ExtremeExorcism::vectorizar(list<Evento> l) {
     vector<Evento> v;
-    for (auto it = l.begin(); it != l.end(); it++) {
-        v.push_back(*it);
+    for (auto it : l) {
+        v.push_back(it);
     }
     return v;
 }
