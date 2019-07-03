@@ -330,22 +330,19 @@ void ExtremeExorcism::reiniciarFantasmas() {
     for (list<InfoFan>::iterator itInfoFan = juego.infoFantasmas.begin();
          itInfoFan != juego.infoFantasmas.end();
          ++itInfoFan){  // O(#f)
-        // Obtengo su info
-        InfoFan info = *itInfoFan;
-
         // Lo seteo como vivo;
-        info.vivo = true;
+        itInfoFan->vivo = true;
 
         // Creo su infoActual y la agrego a infoActualFantasmasVivos,
         // guardandome el iterador
-        PosYDir infoActualFan = PosYDir(info.eventos[0].pos, info.eventos[0].dir);
+        PosYDir infoActualFan = PosYDir(itInfoFan->eventos[0].pos, itInfoFan->eventos[0].dir);
         auto itInfoActualFan = juego.infoActualFantasmasVivos.insert(  // O(1)
                 juego.infoActualFantasmasVivos.begin(),
                 infoActualFan
         );
 
         // Le seteo el iterador a la info actual
-        info.infoActual = itInfoActualFan;
+        itInfoFan->infoActual = itInfoActualFan;
 
         // Agrego un iterador a su info a infoFantasmasVivos
         juego.infoFantasmasVivos.insert(
