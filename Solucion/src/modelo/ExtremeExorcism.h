@@ -231,6 +231,18 @@ private:
     // O(1)
     Pos avanzar(Pos p, Dir d);
 
+    // Genera una secuencia que contiene a la inicial, le suma 5 `pasar`
+    // y agrega la secuencia original invertida.
+    // O(long(eventos)^2)
+    vector<Evento> inversa(vector<Evento> eventos);
+
+    // Invierte un evento.
+    // O(1)
+    Evento invertir(Evento e);
+
+    // Invierte una dirección.
+    // O(1)
+    Dir invertir(Dir d);
 
     list<Evento> vecToList(vector<Evento> vector) const;
 };

@@ -534,3 +534,43 @@ Evento ExtremeExorcism::aplicar(Accion a, Evento eventoActual) {
     }
 }
 
+vector<Evento> ExtremeExorcism::inversa(vector<Evento> eventos) {
+    // Copio el vector de entrada
+    vector<Evento> es = eventos;
+
+    // Me guardo la longitud original
+    int longOriginal = es.size();
+
+    // Creo el evento pasar y lo agrego 5 veces
+    Evento pasar = Evento(eventos.back().pos, eventos.back().dir, false);
+    for(int i = 0; i < 4; i++) {
+        es.push_back(pasar);
+    }
+
+    // Recorro los eventos de la secuencia original de atrás para adelante,
+    // inviertiéndolos y agregándolos al final.
+    for (int i = longOriginal - 1; i > 0; i--) {
+        es.push_back(invertir(es[i]));
+    }
+
+    return es;
+}
+
+Evento ExtremeExorcism::invertir(Evento e) {
+    return Evento(e.pos, invertir(e.dir), e.dispara);
+}
+
+Dir ExtremeExorcism::invertir(Dir d) {
+    switch (d) {
+    case ARRIBA:
+        return ABAJO;
+    case ABAJO:
+        return ARRIBA;
+    case DERECHA:
+        return IZQUIERDA;
+    case IZQUIERDA:
+        return DERECHA;
+    default:
+        return ARRIBA;
+    }
+}
