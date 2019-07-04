@@ -240,13 +240,13 @@ bool ExtremeExorcism::chequearMuerteFantasmas() {
         itFanVivos != juego.infoFantasmasVivos.end();
         ++itFanVivos) {   // O()
         // Obtengo su info
-        InfoFan infoFan = **itFanVivos;
+        InfoFan& infoFan = **itFanVivos;
 
         // Obtengo su evento actual
         Evento eventoActual = eventoActualFan(infoFan, juego.paso);
 
         if (fanAfectadoPorDisparo(eventoActual.pos)) {
-            muereFanEspecial = muereFan(itFanVivos);
+            muereFanEspecial = muereFanEspecial || muereFan(itFanVivos);
         }
     }
 
@@ -266,23 +266,23 @@ bool ExtremeExorcism::fanAfectadoPorDisparo(Pos pos) {
 
 bool ExtremeExorcism::muereFan(list<list<InfoFan>::iterator>::iterator itFanVivos) {
     // Obtengo la info
-    InfoFan infoFan = **itFanVivos;     // O(1)
+    InfoFan& infoFan = **itFanVivos;     // O(1)
 
     // Lo seteo como muerto
     infoFan.vivo = false;               // O(1)
 
     // Obtengo su info actual
-    list<InfoActualFan>::iterator itInfoActual = infoFan.infoActual;      // O(1)
+    auto itInfoActual = infoFan.infoActual;      // O(1)
 
     // Veo si era el especial
-    InfoActualFan info = *(juego.infoFantasmaEspecial);
+    InfoActualFan& info = *(juego.infoFantasmaEspecial);
     bool eraEspecial = (*itInfoActual == info);    // O(1)
 
     // Lo borro de infoActualFantasmasVivos
-    juego.infoActualFantasmasVivos.erase(itInfoActual);                 // O(1)
+    juego.infoActualFantasmasVivos.erase(itInfoActual); // O(1)
 
     // Lo borro de infoFantasmasVivos
-    juego.infoFantasmasVivos.erase(itFanVivos); // TODO: No provee eliminar con iterador?
+    juego.infoFantasmasVivos.erase(itFanVivos); // O(1)
 
     // Retorno si era especial
     return eraEspecial;
