@@ -12,15 +12,15 @@ ExtremeExorcism::Juego::Juego(Habitacion h) :
     ronda(0),
     mapa(h),
     mapaDisparos(vector<vector<PasoDisparo>> (h.tam(),vector<PasoDisparo>(h.tam(), PasoDisparo(0,0)))),
-    infoFantasmaEspecial(linear_set<InfoActualFan>().begin()) {}
-//                                              disparosFanUltimoPaso(algo2::linear_set<Pos>()),
+    infoFantasmaEspecial(list<InfoActualFan>().begin()) {}
+//                                              disparosFanUltimoPaso(list<Pos>()),
 //                                              infoJugadores(string_map<InfoPJ>()),
-//                                              infoActualJugadoresVivosq(algo2::linear_set<InfoActualPJ>()),
-//                                              infoJugadoresVivos(algo2::linear_set<InfoPJ*>()),
-//                                              infoFantasmas(algo2::linear_set<InfoFan>()),
-//                                              infoActualFantasmasVivos(algo2::linear_set<InfoActualFan>()),
-//                                              infoFantasmasVivos(algo2::linear_set<algo2::linear_set<InfoFan>::iterator>()),
-// infoFantasmaEspecial(algo2::linear_set<InfoActualFan>::iterator infoActualFantasmasVivos)
+//                                              infoActualJugadoresVivosq(list<InfoActualPJ>()),
+//                                              infoJugadoresVivos(list<InfoPJ*>()),
+//                                              infoFantasmas(list<InfoFan>()),
+//                                              infoActualFantasmasVivos(list<InfoActualFan>()),
+//                                              infoFantasmasVivos(list<list<InfoFan>::iterator>()),
+// infoFantasmaEspecial(list<InfoActualFan>::iterator infoActualFantasmasVivos)
 
 ExtremeExorcism::PasoDisparo::PasoDisparo(int pj, int fan) : pj(pj), fan(fan) {}
 
@@ -89,7 +89,10 @@ void ExtremeExorcism::iniciarJugadores(const set<Jugador>& jugadores) {
 
         // Creo la infoActual y la agrego a su conjunto
         InfoActualPJ infoActual = InfoActualPJ{pj, localizacion};                   // O(1)
-        auto itInfoActual = juego.infoActualJugadoresVivos.fast_insert(infoActual); // O(1)
+        auto itInfoActual = juego.infoActualJugadoresVivos.insert(
+                juego.infoActualJugadoresVivos.begin(),
+                infoActual
+        ); // O(1)
 
         // Creo la infoPJ con la actual
         InfoPJ info = nuevaInfoPJ(localizacion, itInfoActual);                      // O(1)
@@ -98,12 +101,15 @@ void ExtremeExorcism::iniciarJugadores(const set<Jugador>& jugadores) {
         *infoPtr = info;
 
         // Agrego al conjunto de jugadores vivos el puntero a la info del PJ
-        juego.infoJugadoresVivos.fast_insert(infoPtr);                              // O(1)
+        juego.infoJugadoresVivos.insert(
+                juego.infoJugadoresVivos.begin(),
+                infoPtr
+        );                              // O(1)
     }
 }
 
 ExtremeExorcism::InfoPJ ExtremeExorcism::nuevaInfoPJ(PosYDir localizacion,
-                                                     linear_set<InfoActualPJ>::iterator itInfoActual) {
+                                                     list<InfoActualPJ>::iterator itInfoActual) {
     // La armo
     return InfoPJ(
         crearEventosConLocalizacion(localizacion),
@@ -115,7 +121,10 @@ ExtremeExorcism::InfoPJ ExtremeExorcism::nuevaInfoPJ(PosYDir localizacion,
 void ExtremeExorcism::nuevoFanEspecial(const vector<Evento>& eventosFan) {
     // Creo la infoActual y la agrego a su conjunto
     InfoActualFan infoActual = PosYDir(eventosFan[0].pos, eventosFan[0].dir);   // O(1)
-    auto itInfoActualFan = juego.infoActualFantasmasVivos.fast_insert(infoActual);   // O(1)
+    auto itInfoActualFan = juego.infoActualFantasmasVivos.insert(
+            juego.infoActualFantasmasVivos.begin(),
+            infoActual
+    );   // O(1)
 
     // Hago que este sea el fantasma especial
     juego.infoFantasmaEspecial = itInfoActualFan;   // O(1)
@@ -127,10 +136,16 @@ void ExtremeExorcism::nuevoFanEspecial(const vector<Evento>& eventosFan) {
     InfoFan infoFan = InfoFan(nuevosEventosFan, true, itInfoActualFan); // O(1)
 
     // La agrego al conjunto de info de fantasmas, y me guardo el iterador
-    auto itInfoFan = juego.infoFantasmas.fast_insert(infoFan);  // O(1)
+    auto itInfoFan = juego.infoFantasmas.insert(
+            juego.infoFantasmas.begin(),
+            infoFan
+    );  // O(1)
 
     // Agrego al conjunto de fantasmas vivos el iterador
-    juego.infoFantasmasVivos.fast_insert(itInfoFan);    // O(1)
+    juego.infoFantasmasVivos.insert(
+            juego.infoFantasmasVivos.begin(),
+            itInfoFan
+    );    // O(1)
 }
 
 vector<Evento> ExtremeExorcism::eventosFanInicial(const list<Accion>& l, PosYDir pd) {
@@ -139,6 +154,7 @@ vector<Evento> ExtremeExorcism::eventosFanInicial(const list<Accion>& l, PosYDir
     f.push_back(anterior);
     for(Accion a : l){
         f.push_back(aplicar(a, anterior));
+        anterior = f[f.size() - 1];
     }
     return f;
 }
@@ -161,8 +177,7 @@ ExtremeExorcism::InfoPJ& ExtremeExorcism::actualizarPJ(const Jugador& j, Accion 
     /* infoPJ.infoActual->local = PosYDir(eventoPJ.pos, eventoPJ.dir);
      * Lo de arriba no vale porque -> devuelve un puntero const, es más bizarro. El * devuelve una referencia al valor apuntado.
      */
-    InfoActualPJ iap = *infoPJ.infoActual;
-    iap.local = PosYDir(eventoPJ.pos, eventoPJ.dir);
+    (infoPJ.infoActual)->local = PosYDir(eventoPJ.pos, eventoPJ.dir);
 
 
     // Devuelvo la info
@@ -179,7 +194,7 @@ Evento ExtremeExorcism::eventoActualFan(ExtremeExorcism::InfoFan info, int paso)
 
 void ExtremeExorcism::reiniciarDisparosFan() {
     // Vacío la lista de disparos del ultimo paso
-    juego.disparosFanUltimoPaso.clear(); // TODO: Como hacer clear de algo2::linear_set?
+    juego.disparosFanUltimoPaso.clear(); // TODO: Como hacer clear de list?
 }
 
 void ExtremeExorcism::actualizarMapaDisparosConPJ(Evento eventoPJ) {
@@ -191,30 +206,28 @@ void ExtremeExorcism::actualizarMapaDisparosConPJ(Evento eventoPJ) {
 }
 
 void ExtremeExorcism::agregarDisparo(Pos pos, Dir dir, bool esFan) {
-    // Me creo una copia de pos
-    Pos posC = pos;
-
-    // Parado desde posC en el mapa de disparos, recorro hacia dir
+    // Parado desde la siguiente pos en el mapa de disparos, recorro hacia dir
     // hasta que me choco con un obstaculo o con la pared.
-    while(juego.mapa.valida(posC) && !juego.mapa.ocupado(pos)) {    // O(m)
+    pos = avanzar(pos, dir);
+    while(juego.mapa.valida(pos) && !juego.mapa.ocupado(pos)) {    // O(m)
         // Me guardo una referencia al paso del disparo correcto
-        PasoDisparo disp = pasoDisparoEn(pos);
+        PasoDisparo& disp = pasoDisparoEn(pos);
         int& pasoDisparo = esFan? disp.fan : disp.pj;
 
         // Si no pasé por esta posición con otro,
         // (i.e si en el mapa de disparos no está ya el paso actual)
         if (pasoDisparo != juego.paso) {
             // Le pongo el paso actual al paso en el que hubo un disparo
-            pasoDisparo = juego.paso; // TODO: Se setea por ref?
+            pasoDisparo = juego.paso;
 
             // Si es un fantasma, agrego la posición al conjunto de disparos de fantasmas
             if (esFan) {
-                juego.disparosFanUltimoPaso.insert(posC);
+                juego.disparosFanUltimoPaso.push_back(pos);
             }
         }
 
         // Avanzo la posición en la dirección
-        posC = avanzar(pos, dir);
+        pos = avanzar(pos, dir);
     }
 }
 
@@ -227,13 +240,13 @@ bool ExtremeExorcism::chequearMuerteFantasmas() {
         itFanVivos != juego.infoFantasmasVivos.end();
         ++itFanVivos) {   // O()
         // Obtengo su info
-        InfoFan infoFan = **itFanVivos;
+        InfoFan& infoFan = **itFanVivos;
 
         // Obtengo su evento actual
         Evento eventoActual = eventoActualFan(infoFan, juego.paso);
 
         if (fanAfectadoPorDisparo(eventoActual.pos)) {
-            muereFanEspecial = muereFan(itFanVivos);
+            muereFanEspecial = muereFanEspecial || muereFan(itFanVivos);
         }
     }
 
@@ -251,25 +264,25 @@ bool ExtremeExorcism::fanAfectadoPorDisparo(Pos pos) {
     return afectado;
 }
 
-bool ExtremeExorcism::muereFan(linear_set<linear_set<InfoFan>::iterator>::iterator itFanVivos) {
+bool ExtremeExorcism::muereFan(list<list<InfoFan>::iterator>::iterator itFanVivos) {
     // Obtengo la info
-    InfoFan infoFan = **itFanVivos;     // O(1)
+    InfoFan& infoFan = **itFanVivos;     // O(1)
 
     // Lo seteo como muerto
     infoFan.vivo = false;               // O(1)
 
     // Obtengo su info actual
-    linear_set<InfoActualFan>::iterator itInfoActual = infoFan.infoActual;      // O(1)
+    auto itInfoActual = infoFan.infoActual;      // O(1)
 
     // Veo si era el especial
-    InfoActualFan info = *(juego.infoFantasmaEspecial);
+    InfoActualFan& info = *(juego.infoFantasmaEspecial);
     bool eraEspecial = (*itInfoActual == info);    // O(1)
 
     // Lo borro de infoActualFantasmasVivos
-    juego.infoActualFantasmasVivos.erase(itInfoActual);                 // O(1)
+    juego.infoActualFantasmasVivos.erase(itInfoActual); // O(1)
 
     // Lo borro de infoFantasmasVivos
-    juego.infoFantasmasVivos.erase(itFanVivos); // TODO: No provee eliminar con iterador?
+    juego.infoFantasmasVivos.erase(itFanVivos); // O(1)
 
     // Retorno si era especial
     return eraEspecial;
@@ -300,8 +313,8 @@ void ExtremeExorcism::nuevaRonda(const ExtremeExorcism::InfoPJ& pjMatoFanEspecia
 
 void ExtremeExorcism::reiniciarMapaDisparos() {
     // Recorro todas las posiciones y las reinicio
-    for (vector<PasoDisparo> row : juego.mapaDisparos) {
-        for (PasoDisparo pos : row) {
+    for (vector<PasoDisparo>& row : juego.mapaDisparos) {
+        for (PasoDisparo& pos : row) {
             pos.pj = 0;
             pos.fan = 0;
         }
@@ -310,36 +323,39 @@ void ExtremeExorcism::reiniciarMapaDisparos() {
 
 void ExtremeExorcism::reiniciarFantasmas() {
     // Vacío la información de los fantasmas vivos
-    juego.infoFantasmasVivos.clear(); // TODO: Como hacer clear de algo2::linear_set?
-    juego.infoActualFantasmasVivos.clear(); // TODO: Como hacer clear de algo2::linear_set?
+    juego.infoFantasmasVivos.clear(); // TODO: Como hacer clear de list?
+    juego.infoActualFantasmasVivos.clear(); // TODO: Como hacer clear de list?
 
     // Recorro infoFantasmas con un iterador
-    for (linear_set<InfoFan>::iterator itInfoFan = juego.infoFantasmas.begin();
+    for (list<InfoFan>::iterator itInfoFan = juego.infoFantasmas.begin();
          itInfoFan != juego.infoFantasmas.end();
          ++itInfoFan){  // O(#f)
-        // Obtengo su info
-        InfoFan info = *itInfoFan;
-
         // Lo seteo como vivo;
-        info.vivo = true;
+        itInfoFan->vivo = true;
 
         // Creo su infoActual y la agrego a infoActualFantasmasVivos,
         // guardandome el iterador
-        PosYDir infoActualFan = PosYDir(info.eventos[0].pos, info.eventos[0].dir);
-        auto itInfoActualFan = juego.infoActualFantasmasVivos.fast_insert(infoActualFan); // O(1)
+        PosYDir infoActualFan = PosYDir(itInfoFan->eventos[0].pos, itInfoFan->eventos[0].dir);
+        auto itInfoActualFan = juego.infoActualFantasmasVivos.insert(  // O(1)
+                juego.infoActualFantasmasVivos.begin(),
+                infoActualFan
+        );
 
         // Le seteo el iterador a la info actual
-        info.infoActual = itInfoActualFan;
+        itInfoFan->infoActual = itInfoActualFan;
 
         // Agrego un iterador a su info a infoFantasmasVivos
-        juego.infoFantasmasVivos.fast_insert(itInfoFan);
+        juego.infoFantasmasVivos.insert(
+                juego.infoFantasmasVivos.begin(),
+                itInfoFan
+        );
     }
 }
 
 void ExtremeExorcism::reiniciarJugadores() {
     // Vacío las estructuras de vivos
-    juego.infoActualJugadoresVivos.clear(); // TODO: Como hacer clear de algo2::linear_set?
-    juego.infoJugadoresVivos.clear(); // TODO: Como hacer clear de algo2::linear_set?
+    juego.infoActualJugadoresVivos.clear(); // TODO: Como hacer clear de list?
+    juego.infoJugadoresVivos.clear(); // TODO: Como hacer clear de list?
 
     // Obtengo sus localizaciones
     map<Jugador, PosYDir> localPJs = ctx.localizar_jugadores(jugadores(), fantasmas(), juego.mapa);
@@ -364,13 +380,19 @@ void ExtremeExorcism::reiniciarJugadores() {
         InfoActualPJ infoActualPJ = InfoActualPJ{pj, localizacion};
 
         // La agrego a infoActualJugadoresVivos y me guardo el iterador
-        auto itInfoActual = juego.infoActualJugadoresVivos.fast_insert(infoActualPJ);
+        auto itInfoActual = juego.infoActualJugadoresVivos.insert(
+                juego.infoActualJugadoresVivos.begin(),
+                infoActualPJ
+        );
 
         // Le seteo la info actual
         infoPJ.infoActual = itInfoActual;
 
         // Agrego un puntero a la infoPJ a infoJugadoresvivos
-        juego.infoJugadoresVivos.fast_insert(&infoPJ);
+        juego.infoJugadoresVivos.insert(
+                juego.infoJugadoresVivos.begin(),
+                &infoPJ
+        );
     }
 }
 
@@ -404,13 +426,8 @@ Evento ExtremeExorcism::actualizarFan(InfoFan& info) {
     // Obtengo el evento actual
     Evento evtActual = eventoActualFan(info, juego.paso);
 
-    // Obtengo el iterador a la info actual
-    algo2::linear_set<InfoActualFan>::iterator& itInfoActual = info.infoActual;
-
-    // La actualizo con el evento actual
-    InfoActualFan iaf = *info.infoActual; //ESTO NO SIRVE AL FINAL. ROMPE PORQUE NO SE ESTÁ MODIFICANDO.
-    iaf.pos = evtActual.pos;
-    iaf.dir = evtActual.dir;
+    // Actualizo la info actual con el evento actual
+    *(info.infoActual) = PosYDir(evtActual.pos, evtActual.dir);
 
     // Devuelvo el evento actualposicionJugador
     return evtActual;
@@ -444,7 +461,7 @@ bool ExtremeExorcism::pjAfectadoPorDisparo(Pos pos) {
 
 }
 
-void ExtremeExorcism::muerePJ(linear_set<InfoPJ *>::iterator itPJVivos) {
+void ExtremeExorcism::muerePJ(list<InfoPJ *>::iterator itPJVivos) {
     // Obtengo una ref a su info
     InfoPJ& info = **itPJVivos;
 
@@ -576,8 +593,8 @@ list<Evento> ExtremeExorcism::vecToList(vector<Evento> vector) const {
 
 vector<Evento> ExtremeExorcism::vectorizar(list<Evento> l) {
     vector<Evento> v;
-    for (auto it = l.begin(); it != l.end(); it++) {
-        v.push_back(*it);
+    for (auto it : l) {
+        v.push_back(it);
     }
     return v;
 }
@@ -587,16 +604,16 @@ Pos ExtremeExorcism::avanzar(Pos p, Dir d) {
     switch (d)
     {
         case ARRIBA:
-            pos = Pos(p.first + 1, p.second);
+            pos = Pos(p.first, p.second + 1);
             break;
         case ABAJO:
-            pos = Pos(p.first - 1, p.second);
-            break;
-        case IZQUIERDA:
             pos = Pos(p.first, p.second - 1);
             break;
+        case IZQUIERDA:
+            pos = Pos(p.first - 1, p.second);
+            break;
         case DERECHA:
-            pos = Pos(p.first, p.second + 1);
+            pos = Pos(p.first + 1, p.second);
             break;
     }
     return pos;
@@ -650,7 +667,7 @@ vector<Evento> ExtremeExorcism::inversa(vector<Evento> eventos) {
 
     // Creo el evento pasar y lo agrego 5 veces
     Evento pasar = Evento(eventos.back().pos, eventos.back().dir, false);
-    for(int i = 0; i < 4; i++) {
+    for(int i = 0; i < 5; i++) {
         es.push_back(pasar);
     }
 
@@ -661,7 +678,7 @@ vector<Evento> ExtremeExorcism::inversa(vector<Evento> eventos) {
     }
 
     pasar = Evento(es.back().pos, es.back().dir, false);
-    for(int i = 0; i < 4; i++) {
+    for(int i = 0; i < 5; i++) {
         es.push_back(pasar);
     }
 

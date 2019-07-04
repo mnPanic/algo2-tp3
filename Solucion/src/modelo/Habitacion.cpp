@@ -24,7 +24,10 @@ bool Habitacion::operator==(const Habitacion & h) const {
 }
 
 bool Habitacion::valida(Pos pos) const {
-    return 0 <= pos.first < tamanio && 0 <= pos.second < tamanio && !casilleros[pos.first][pos.second];
+    return 0 <= pos.first &&
+                pos.first < tamanio &&
+           0 <= pos.second &&
+                pos.second < tamanio;
 }
 
 Habitacion string_to_hab(std::istream& is) {
