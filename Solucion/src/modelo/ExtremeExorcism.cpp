@@ -237,7 +237,7 @@ bool ExtremeExorcism::chequearMuerteFantasmas() {
 
     // Recorro los fantasmas vivos con un iterador
     auto itFanVivos = juego.infoFantasmasVivos.begin();
-    while(itFanVivos != juego.infoFantasmasVivos.end()) {   // O()
+    while(itFanVivos != juego.infoFantasmasVivos.end() && !muereFanEspecial) {   // O()
         // Obtengo su info
         InfoFan& infoFan = **itFanVivos;
 
@@ -245,11 +245,7 @@ bool ExtremeExorcism::chequearMuerteFantasmas() {
         Evento eventoActual = eventoActualFan(infoFan, juego.paso);
 
         if (fanAfectadoPorDisparo(eventoActual.pos)) {
-            if(muereFanEspecial) {
-                muereFan(itFanVivos++);
-            } else {
-                muereFanEspecial = muereFan(itFanVivos++);
-            }
+            muereFanEspecial = muereFan(itFanVivos++);
         } else {
             ++itFanVivos;
         }
