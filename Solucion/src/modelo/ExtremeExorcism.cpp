@@ -236,9 +236,8 @@ bool ExtremeExorcism::chequearMuerteFantasmas() {
     bool muereFanEspecial = false;
 
     // Recorro los fantasmas vivos con un iterador
-    for(auto itFanVivos = juego.infoFantasmasVivos.begin();
-        itFanVivos != juego.infoFantasmasVivos.end();
-        ++itFanVivos) {   // O()
+    auto itFanVivos = juego.infoFantasmasVivos.begin();
+    while(itFanVivos != juego.infoFantasmasVivos.end() && !muereFanEspecial) {   // O()
         // Obtengo su info
         InfoFan& infoFan = **itFanVivos;
 
@@ -246,7 +245,9 @@ bool ExtremeExorcism::chequearMuerteFantasmas() {
         Evento eventoActual = eventoActualFan(infoFan, juego.paso);
 
         if (fanAfectadoPorDisparo(eventoActual.pos)) {
-            muereFanEspecial = muereFanEspecial || muereFan(itFanVivos);
+            muereFanEspecial = muereFanEspecial || muereFan(itFanVivos++);
+        } else {
+            ++itFanVivos;
         }
     }
 
@@ -435,17 +436,29 @@ Evento ExtremeExorcism::actualizarFan(InfoFan& info) {
 
 void ExtremeExorcism::chequearMuerteJugadores() {
     // Recorro los jugadores vivos
-    for (auto itPJVivos = juego.infoJugadoresVivos.begin();
-         itPJVivos != juego.infoJugadoresVivos.end();
-         ++itPJVivos) {
+    auto itPJVivos = juego.infoJugadoresVivos.begin();
+    while(itPJVivos != juego.infoJugadoresVivos.end() && !juego.infoJugadoresVivos.empty()) {
         // Obtengo su evento actual
         InfoPJ* ptrInfoPJ = *itPJVivos;
         Evento eventoActual = eventoActualPJ(*ptrInfoPJ);
 
         if (pjAfectadoPorDisparo(eventoActual.pos)) {
-            muerePJ(itPJVivos);
+            muerePJ(itPJVivos++);
+        } else {
+            itPJVivos++;
         }
     }
+//    for (auto itPJVivos = juego.infoJugadoresVivos.begin();
+//    itPJVivos != juego.infoJugadoresVivos.end() && !juego.infoJugadoresVivos.empty();
+//    itPJVivos++) {
+//        // Obtengo su evento actual
+//        InfoPJ* ptrInfoPJ = *itPJVivos;
+//        Evento eventoActual = eventoActualPJ(*ptrInfoPJ);
+//
+//        if (pjAfectadoPorDisparo(eventoActual.pos)) {
+//            muerePJ(itPJVivos);
+//        }
+//    }
 }
 
 bool ExtremeExorcism::pjAfectadoPorDisparo(Pos pos) {
