@@ -4,6 +4,8 @@ Algoritmos y Estructuras de datos II.
 
 TP 3 - Exorcismo Extremo
 
+[Referencia repo TP2](https://github.com/mnPanic/algo2-tp2/tree/master/solucion)
+
 ## Integrantes
 
 Nombre                  | LU        | Mail
