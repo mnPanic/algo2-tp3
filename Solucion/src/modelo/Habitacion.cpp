@@ -92,5 +92,3 @@ Habitacion string_to_hab(string s) {
     Habitacion h(height, occupied);
     return h;
 }
-
-// Completar

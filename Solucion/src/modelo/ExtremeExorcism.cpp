@@ -97,7 +97,7 @@ void ExtremeExorcism::iniciarJugadores(const set<Jugador>& jugadores) {
         // Creo la infoPJ con la actual
         InfoPJ info = nuevaInfoPJ(localizacion, itInfoActual);                      // O(1)
         // La agrego al trie y me guardo un puntero a la info guardada
-        InfoPJ* infoPtr = &juego.infoJugadores[pj];                                 // O(|pj|) // TODO: Cambiar por el nombre real de la función
+        InfoPJ* infoPtr = &juego.infoJugadores[pj];                                 // O(|pj|)
         *infoPtr = info;
 
         // Agrego al conjunto de jugadores vivos el puntero a la info del PJ
@@ -324,8 +324,8 @@ void ExtremeExorcism::reiniciarMapaDisparos() {
 
 void ExtremeExorcism::reiniciarFantasmas() {
     // Vacío la información de los fantasmas vivos
-    juego.infoFantasmasVivos.clear(); // TODO: Como hacer clear de list?
-    juego.infoActualFantasmasVivos.clear(); // TODO: Como hacer clear de list?
+    juego.infoFantasmasVivos.clear();
+    juego.infoActualFantasmasVivos.clear();
 
     // Recorro infoFantasmas con un iterador
     for (list<InfoFan>::iterator itInfoFan = juego.infoFantasmas.begin();
@@ -355,8 +355,8 @@ void ExtremeExorcism::reiniciarFantasmas() {
 
 void ExtremeExorcism::reiniciarJugadores() {
     // Vacío las estructuras de vivos
-    juego.infoActualJugadoresVivos.clear(); // TODO: Como hacer clear de list?
-    juego.infoJugadoresVivos.clear(); // TODO: Como hacer clear de list?
+    juego.infoActualJugadoresVivos.clear();
+    juego.infoJugadoresVivos.clear();
 
     // Obtengo sus localizaciones
     map<Jugador, PosYDir> localPJs = ctx.localizar_jugadores(jugadores(), fantasmas(), juego.mapa);
@@ -482,10 +482,10 @@ void ExtremeExorcism::muerePJ(list<InfoPJ *>::iterator itPJVivos) {
     info.vivo = false;
 
     // Lo borro del conjunto infoActualJugadoresVivos
-    juego.infoActualJugadoresVivos.erase(info.infoActual); // TODO: No se puede borrar con iterador?
+    juego.infoActualJugadoresVivos.erase(info.infoActual);  // O(1)
 
     // Lo borro del conjunto infoJugadoresVivos
-    juego.infoJugadoresVivos.erase(itPJVivos); // TODO: No se puede borrar con iterador?
+    juego.infoJugadoresVivos.erase(itPJVivos);              // O(1)
 }
 
 void ExtremeExorcism::agregarPasarFaltantes() {
