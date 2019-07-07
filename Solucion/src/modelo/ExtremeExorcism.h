@@ -31,7 +31,7 @@ public:
 
     // Actualiza con acción del jugador.
     //  - Sin pasar de ronda: O(|pj| + #fv * m + #jv)
-    //  - Pasando de ronda:   O(|pj| + m^2 + #f + locJugadores + #j * (|maxPj| + long(maxEvt))
+    //  - Pasando de ronda:   O(|pj| + m^2 + #f * m + locJugadores + #j * (|maxPj| + long(maxEvt))
     void ejecutarAccion(const Jugador& j, Accion a); //O(|pj| + m*#fv #jv)
 
     // (InfoActualPJVivos)
@@ -214,7 +214,7 @@ private:
 
     // Cambia la ronda, agregando un fantasma especial y
     // reiniciando todas las estructuras
-    // O(m^2 + #f + locJugadores + #j * (|maxPJ| + long(maxEvt))
+    // O(m^2 + #f * m + locJugadores + #j * (|maxPJ| + long(maxEvt))
     void nuevaRonda(const InfoPJ& pjMatoFanEspecial);
 
     // Reinicia los disparos del mapa de disparos.

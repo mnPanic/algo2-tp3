@@ -29,7 +29,7 @@ void ExtremeExorcism::pasar() {
     juego.paso++; // O(1)
 
     // Reinicio los disparos de los fantasmas
-    reiniciarDisparosFan();         // O(1)
+    reiniciarDisparosFan();         // O(#fv)
 
     // Actualizo las acciones de los fantasmas, actualizando el mapa de
     // disparos si es que disparan
@@ -52,7 +52,7 @@ void ExtremeExorcism::ejecutarAccion(const Jugador& j, Accion a) {
     Evento eventoPJ = eventoActualPJ(infoPJ);           // O(1)
 
     // Reinicio los disparos de fantasmas
-    reiniciarDisparosFan();                             // O(1)
+    reiniciarDisparosFan();                             // O(#fv * m)
 
     // Modifico el mapa de disparos (solo si el pj dispara)
     actualizarMapaDisparosConPJ(eventoPJ);            // O(m)
@@ -62,7 +62,7 @@ void ExtremeExorcism::ejecutarAccion(const Jugador& j, Accion a) {
 
     // Si murió, cambio de ronda
     if(murioFanEspecial) {
-        nuevaRonda(infoPJ);   // O(m^2 + #f + locJugadores + #j * (|pjMasLargo| + long(maxEv)))
+        nuevaRonda(infoPJ);   // O(m^2 + #f * m + locJugadores + #j * (|pjMasLargo| + long(maxEv)))
     } else {
         // Sigo en la misma ronda
 
@@ -194,7 +194,19 @@ Evento ExtremeExorcism::eventoActualFan(ExtremeExorcism::InfoFan info, int paso)
 
 void ExtremeExorcism::reiniciarDisparosFan() {
     // Vacío la lista de disparos del ultimo paso
-    juego.disparosFanUltimoPaso.clear(); // TODO: Como hacer clear de list?
+    juego.disparosFanUltimoPaso.clear();    // O(#fv * m)
+
+    // Nota de complejidad
+    // -------------------
+    //
+    //  Como los únicos que disparan son los fantasmas que están vivos, solo
+    //  sus disparos serán agregados a la lista.
+    //
+    //  Cada fantasma tiene a lo sumo m (tamaño del mapa) posiciones afectadas
+    //  por sus disparos. Entonces la lista tiene O(#fv * m) elementos.
+    //
+    //  Como la complejidad del clear de una std::list es O(n), la complejidad
+    //  De este clear es O(#fv * m)
 }
 
 void ExtremeExorcism::actualizarMapaDisparosConPJ(Evento eventoPJ) {
@@ -298,7 +310,7 @@ void ExtremeExorcism::nuevaRonda(const ExtremeExorcism::InfoPJ& pjMatoFanEspecia
 
     // Reinicio el mapa de disparos y los disparos de los fantasmas
     reiniciarMapaDisparos();    // O(m^2)
-    reiniciarDisparosFan();     // O(1)
+    reiniciarDisparosFan();     // O(#f * m)
 
     // Reinicio los fantasmas
     reiniciarFantasmas();       // O(#f)
@@ -324,8 +336,8 @@ void ExtremeExorcism::reiniciarMapaDisparos() {
 
 void ExtremeExorcism::reiniciarFantasmas() {
     // Vacío la información de los fantasmas vivos
-    juego.infoFantasmasVivos.clear();
-    juego.infoActualFantasmasVivos.clear();
+    juego.infoFantasmasVivos.clear();           // O(#fv)
+    juego.infoActualFantasmasVivos.clear();     // O(#fv)
 
     // Recorro infoFantasmas con un iterador
     for (list<InfoFan>::iterator itInfoFan = juego.infoFantasmas.begin();
@@ -355,13 +367,13 @@ void ExtremeExorcism::reiniciarFantasmas() {
 
 void ExtremeExorcism::reiniciarJugadores() {
     // Vacío las estructuras de vivos
-    juego.infoActualJugadoresVivos.clear();
-    juego.infoJugadoresVivos.clear();
+    juego.infoActualJugadoresVivos.clear();     // O(#jv)
+    juego.infoJugadoresVivos.clear();           // O(#jv)
 
     // Obtengo sus localizaciones
-    map<Jugador, PosYDir> localPJs = ctx.localizar_jugadores(jugadores(), fantasmas(), juego.mapa);
+    map<Jugador, PosYDir> localPJs = ctx.localizar_jugadores(jugadores(), fantasmas(), juego.mapa); // O(locJugadores)
 
-    for(auto& pair : localPJs) {
+    for(auto& pair : localPJs) {                // O(#j * (|maxPJ| + long(maxEvt))
         Jugador pj = pair.first;
         PosYDir localizacion = pair.second;
 
