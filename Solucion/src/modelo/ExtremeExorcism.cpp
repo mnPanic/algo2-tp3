@@ -317,15 +317,6 @@ list<Evento> ExtremeExorcism::crearEventosConLocalizacion(PosYDir localizacion) 
     Evento evt = Evento(localizacion.pos, localizacion.dir, false);
     list<Evento> eventos;
     eventos.push_back(evt);
-//                                              disparosFanUltimoPaso(list<Pos>()),
-//                                              infoJugadores(string_map<InfoPJ>()),
-//                                              infoActualJugadoresVivosq(list<InfoActualPJ>()),
-//                                              infoJugadoresVivos(list<InfoPJ*>()),
-//                                              infoFantasmas(list<InfoFan>()),
-//                                              infoActualFantasmasVivos(list<InfoActualFan>()),
-//                                              infoFantasmasVivos(list<list<InfoFan>::iterator>()),
-// infoFantasmaEspecial(list<InfoActualFan>::iterator infoActualFantasmasVivos)
-
     return eventos;
 }
 
