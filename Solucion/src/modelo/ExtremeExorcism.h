@@ -263,7 +263,7 @@ private:
 
     // Convierte una lista en un vector.
     // O(n)
-    vector<Evento> vectorizar(list<Evento> l);
+    vector<Evento> vectorizar(const list<Evento>& l);
 
     // TODO: Mover a acción? NO, DEJÉMOSLÓ ACÁ PORQUE APLICAR RECIBE UN JUEGO.
 
