@@ -513,8 +513,12 @@ Evento ExtremeExorcism::aplicar(Accion a, Evento eventoActual) {
 
     Pos prox = avanzar(eventoActual.pos, dirDeA);
     if (juego.mapa.valida(prox) && !juego.mapa.ocupado(prox)) {
+        // Si es una posición valida que no está ocupada, entonces me puedo
+        // mover en esa dirección.
         return Evento(prox, dirDeA, false);
     }
+    // Sino, solamente cambia la dirección en la que miro, pero mi posición
+    // se mantiene.
     return Evento(eventoActual.pos, dirDeA, false);
 }
 
