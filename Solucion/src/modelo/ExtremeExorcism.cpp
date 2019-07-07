@@ -19,7 +19,8 @@ ExtremeExorcism::PasoDisparo::PasoDisparo(int pj, int fan) : pj(pj), fan(fan) {}
 void ExtremeExorcism::pasar() {
     juego.paso++; // O(1)
 
-    reiniciarDisparosFan();         // O(1)
+    // Reinicio los disparos de los fantasmas
+    reiniciarDisparosFan();         // O(#fv)
 
     // Actualizo las acciones de los fantasmas, actualizando el mapa de
     // disparos si es que disparan
@@ -36,7 +37,8 @@ void ExtremeExorcism::ejecutarAccion(const Jugador& j, Accion a) {
     InfoPJ infoPJ = actualizarPJ(j, a);                 // O(|j|)
     Evento eventoPJ = eventoActualPJ(infoPJ);           // O(1)
 
-    reiniciarDisparosFan();                             // O(1)
+    // Reinicio los disparos de fantasmas
+    reiniciarDisparosFan();                             // O(#fv * m)
 
     // Modifico el mapa de disparos (solo si el pj dispara)
     actualizarMapaDisparosConPJ(eventoPJ);            // O(m)
@@ -45,7 +47,7 @@ void ExtremeExorcism::ejecutarAccion(const Jugador& j, Accion a) {
     bool murioFanEspecial = chequearMuerteFantasmas();  // O(#fv)
 
     if(murioFanEspecial) {
-        nuevaRonda(infoPJ);   // O(m^2 + #f + locJugadores + #j * (|pjMasLargo| + long(maxEv)))
+        nuevaRonda(infoPJ);   // O(m^2 + #f * m + locJugadores + #j * (|pjMasLargo| + long(maxEv)))
     } else {
         // Actualizo las acciones de los fantasmas, actualizando el mapa de
         // disparos si disparan
@@ -71,7 +73,7 @@ void ExtremeExorcism::iniciarJugadores(const set<Jugador>& jugadores) {
 
         InfoPJ info = nuevaInfoPJ(localizacion, itInfoActual);                      // O(1)
         // La agrego al trie y me guardo un puntero a la info guardada
-        InfoPJ* infoPtr = &juego.infoJugadores[pj];                                 // O(|pj|) // TODO: Cambiar por el nombre real de la función
+        InfoPJ* infoPtr = &juego.infoJugadores[pj];                                 // O(|pj|)
         *infoPtr = info;
 
         juego.infoJugadoresVivos.insert(
@@ -152,7 +154,20 @@ Evento ExtremeExorcism::eventoActualFan(ExtremeExorcism::InfoFan info, int paso)
 }
 
 void ExtremeExorcism::reiniciarDisparosFan() {
-    juego.disparosFanUltimoPaso.clear(); // TODO: Como hacer clear de list?
+    // Vacío la lista de disparos del ultimo paso
+    juego.disparosFanUltimoPaso.clear();    // O(#fv * m)
+
+    // Nota de complejidad
+    // -------------------
+    //
+    //  Como los únicos que disparan son los fantasmas que están vivos, solo
+    //  sus disparos serán agregados a la lista.
+    //
+    //  Cada fantasma tiene a lo sumo m (tamaño del mapa) posiciones afectadas
+    //  por sus disparos. Entonces la lista tiene O(#fv * m) elementos.
+    //
+    //  Como la complejidad del clear de una std::list es O(n), la complejidad
+    //  De este clear es O(#fv * m)
 }
 
 void ExtremeExorcism::actualizarMapaDisparosConPJ(Evento eventoPJ) {
@@ -234,7 +249,9 @@ void ExtremeExorcism::nuevaRonda(const ExtremeExorcism::InfoPJ& pjMatoFanEspecia
 
     // Reinicio las estructuras
     reiniciarMapaDisparos();    // O(m^2)
-    reiniciarDisparosFan();     // O(1)
+    reiniciarDisparosFan();     // O(#f * m)
+
+    // Reinicio los fantasmas
     reiniciarFantasmas();       // O(#f)
 
     vector<Evento> nuevoFan = vectorizar(pjMatoFanEspecial.eventos);
@@ -256,8 +273,8 @@ void ExtremeExorcism::reiniciarMapaDisparos() {
 
 void ExtremeExorcism::reiniciarFantasmas() {
     // Vacío la información de los fantasmas vivos
-    juego.infoFantasmasVivos.clear(); // TODO: Como hacer clear de list?
-    juego.infoActualFantasmasVivos.clear(); // TODO: Como hacer clear de list?
+    juego.infoFantasmasVivos.clear();           // O(#fv)
+    juego.infoActualFantasmasVivos.clear();     // O(#fv)
 
     for (auto itInfoFan = juego.infoFantasmas.begin();
          itInfoFan != juego.infoFantasmas.end();
@@ -281,12 +298,14 @@ void ExtremeExorcism::reiniciarFantasmas() {
 }
 
 void ExtremeExorcism::reiniciarJugadores() {
-    juego.infoActualJugadoresVivos.clear(); // TODO: Como hacer clear de list?
-    juego.infoJugadoresVivos.clear(); // TODO: Como hacer clear de list?
+    // Vacío las estructuras de vivos
+    juego.infoActualJugadoresVivos.clear();     // O(#jv)
+    juego.infoJugadoresVivos.clear();           // O(#jv)
 
-    map<Jugador, PosYDir> localPJs = ctx.localizar_jugadores(jugadores(), fantasmas(), juego.mapa);
+    // Obtengo sus localizaciones
+    map<Jugador, PosYDir> localPJs = ctx.localizar_jugadores(jugadores(), fantasmas(), juego.mapa); // O(locJugadores)
 
-    for(auto& pair : localPJs) {
+    for(auto& pair : localPJs) {                // O(#j * (|maxPJ| + long(maxEvt))
         Jugador pj = pair.first;
         PosYDir localizacion = pair.second;
 
@@ -369,8 +388,12 @@ bool ExtremeExorcism::pjAfectadoPorDisparo(Pos pos) {
 void ExtremeExorcism::muerePJ(list<InfoPJ *>::iterator itPJVivos) {
     InfoPJ& info = **itPJVivos;
     info.vivo = false;
-    juego.infoActualJugadoresVivos.erase(info.infoActual); // TODO: No se puede borrar con iterador?
-    juego.infoJugadoresVivos.erase(itPJVivos); // TODO: No se puede borrar con iterador?
+
+    // Lo borro del conjunto infoActualJugadoresVivos
+    juego.infoActualJugadoresVivos.erase(info.infoActual);  // O(1)
+
+    // Lo borro del conjunto infoJugadoresVivos
+    juego.infoJugadoresVivos.erase(itPJVivos);              // O(1)
 }
 
 void ExtremeExorcism::agregarPasarFaltantes() {
